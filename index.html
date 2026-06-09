@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assistente de Área — Trilha de Aprendizagem</title>
+<style>
+:root {
+  --bg:#09101F;--bg-card:#111827;--bg-card2:#1A2438;
+  --border:#1F2E45;--border-bright:#2A3F5F;
+  --text:#D8E4F0;--muted:#6B7E96;
+  --cyan:#00C8E8;--green:#00CC6A;--amber:#F59E0B;
+  --coral:#F97316;--purple:#8B5CF6;
+  --accent:var(--cyan);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+
+/* ═══ PORTAL ═══ */
+#portal{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;padding:40px 24px;transition:opacity .4s}
+#portal.out{opacity:0;pointer-events:none}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;text-align:center}
+.portal-h1{font-size:2.4rem;font-weight:800;color:#fff;text-align:center;line-height:1.2;margin-bottom:.6rem}
+.portal-h1 em{color:var(--cyan);font-style:normal}
+.portal-sub{font-size:.95rem;color:var(--muted);text-align:center;max-width:500px;line-height:1.65;margin-bottom:2.4rem}
+.trilha-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:820px}
+@media(max-width:680px){.trilha-grid{grid-template-columns:1fr}}
+.trilha-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px 20px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative;overflow:hidden}
+.trilha-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;border-radius:14px}
+.trilha-card:hover{transform:translateY(-3px)}
+.trilha-card[data-t="google"]::after{background:radial-gradient(circle at 50% 0%,rgba(0,200,232,.09),transparent 70%)}
+.trilha-card[data-t="claude"]::after{background:radial-gradient(circle at 50% 0%,rgba(249,115,22,.08),transparent 70%)}
+.trilha-card[data-t="n8n"]::after{background:radial-gradient(circle at 50% 0%,rgba(0,204,106,.08),transparent 70%)}
+.trilha-card:hover::after{opacity:1}
+.trilha-card[data-t="google"]:hover{border-color:var(--cyan)}
+.trilha-card[data-t="claude"]:hover{border-color:var(--coral)}
+.trilha-card[data-t="n8n"]:hover{border-color:var(--green)}
+.t-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:12px;position:relative;z-index:1}
+.t-icon.g{background:rgba(0,200,232,.12);border:1px solid rgba(0,200,232,.25)}
+.t-icon.c{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.25)}
+.t-icon.n{background:rgba(0,204,106,.12);border:1px solid rgba(0,204,106,.25)}
+.t-name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px;position:relative;z-index:1}
+.t-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:14px;position:relative;z-index:1}
+.t-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;position:relative;z-index:1}
+.tag{font-size:.7rem;padding:2px 7px;border-radius:20px;border:1px solid var(--border-bright);color:var(--muted)}
+.t-cta{font-size:.8rem;font-weight:700;padding-top:12px;border-top:1px solid var(--border);position:relative;z-index:1}
+.t-cta.g{color:var(--cyan)}.t-cta.c{color:var(--coral)}.t-cta.n{color:var(--green)}
+
+/* resume banner */
+#resume-banner{display:none;width:100%;max-width:820px;background:rgba(0,204,106,.07);border:1px solid rgba(0,204,106,.25);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:.88rem;color:var(--text);line-height:1.5}
+#resume-banner strong{color:var(--green)}
+#resume-banner button{margin-left:12px;background:var(--green);color:#000;border:none;padding:5px 14px;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer}
+
+/* ═══ APP SHELL ═══ */
+#app{display:none;flex:1;flex-direction:column;overflow:hidden}
+
+/* top bar */
+.topbar{padding:10px 24px;background:rgba(9,16,31,.9);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;backdrop-filter:blur(6px)}
+.mod-badge{background:var(--bg-card);border:1px solid var(--accent);color:var(--accent);padding:4px 11px;border-radius:20px;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+.progress-wrap{flex:1;display:flex;flex-direction:column;gap:3px}
+.progress-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .4s}
+.step-counter{color:var(--muted);font-size:.82rem;white-space:nowrap}
+
+/* body layout */
+.body-layout{flex:1;display:flex;overflow:hidden}
+
+/* main content */
+.main-col{flex:1;overflow-y:auto;padding:32px 40px;scroll-behavior:smooth}
+@media(max-width:900px){.main-col{padding:20px 18px}}
+
+/* etapa content */
+.etapa{display:none;flex-direction:column;gap:20px;max-width:960px;animation:fadeUp .3s ease}
+.etapa.active{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+h1{font-size:2.4rem;color:#fff;font-weight:800;line-height:1.2;margin-bottom:8px}
+h1 em{color:var(--accent);font-style:normal}
+h2{font-size:1.7rem;color:var(--accent);font-weight:700;border-left:4px solid var(--accent);padding-left:12px;line-height:1.3}
+h3{font-size:1.2rem;color:#fff;font-weight:600;margin-bottom:8px}
+p{font-size:1rem;line-height:1.65;color:var(--text)}
+ul,ol{padding-left:4px;display:grid;gap:8px}
+li{font-size:.98rem;position:relative;padding-left:20px;color:var(--text);line-height:1.5}
+ul li::before{content:"➔";position:absolute;left:0;color:var(--accent);font-size:.85rem;top:2px}
+ol{list-style:none;counter-reset:ol-c}
+ol li{counter-increment:ol-c}
+ol li::before{content:counter(ol-c);position:absolute;left:0;color:var(--accent);font-weight:700;font-size:.85rem;top:1px}
+strong{font-weight:600;color:#fff}
+pre{background:#060B14;border:1px solid var(--border);padding:16px;border-radius:8px;font-family:'Consolas',monospace;font-size:.88rem;color:#93C5FD;white-space:pre-wrap;line-height:1.55}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+.card{background:var(--bg-card);padding:18px;border-radius:12px;border:1px solid var(--border)}
+.card h4{font-size:1rem;margin-bottom:10px;color:var(--green)}
+.card.amber h4{color:var(--amber)}.card.coral h4{color:var(--coral)}.card.cyan h4{color:var(--cyan)}.card.purple h4{color:var(--purple)}
+
+table{width:100%;border-collapse:collapse;background:var(--bg-card);border-radius:10px;overflow:hidden}
+th,td{padding:11px 16px;text-align:left;font-size:.9rem;border-bottom:1px solid var(--border)}
+th{background:rgba(0,200,232,.07);color:var(--accent);font-weight:600}
+tr:last-child td{border-bottom:none}
+td strong{color:#fff}
+
+/* block types */
+.block{border-radius:10px;padding:16px 18px;margin-bottom:2px}
+.block-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:6px}
+.block.learn{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.2)}
+.block.learn .block-label{color:var(--purple)}
+.block.why{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.18)}
+.block.why .block-label{color:var(--amber)}
+.block.do{background:rgba(0,200,232,.06);border:1px solid rgba(0,200,232,.18)}
+.block.do .block-label{color:var(--cyan)}
+.block.test{background:rgba(0,204,106,.06);border:1px solid rgba(0,204,106,.18)}
+.block.test .block-label{color:var(--green)}
+.block.key{background:rgba(0,200,232,.04);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;font-weight:600;color:#fff;font-size:1rem;line-height:1.55}
+.block.hook{background:rgba(245,158,11,.04);border-left:4px solid var(--amber);border-radius:0 10px 10px 0;font-style:italic;color:var(--muted);font-size:.92rem;line-height:1.55}
+.block.diag{background:var(--bg-card2);border:1px solid var(--border-bright)}
+.block.diag .block-label{color:var(--amber)}
+.block.diag p{font-size:1.1rem;color:#fff;font-weight:600;line-height:1.4}
+
+/* comp cards */
+.comp-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.comp-row{grid-template-columns:1fr 1fr}}
+.comp-card{border-radius:11px;padding:16px 14px;border:1px solid transparent}
+.comp-card.prompt{background:rgba(139,92,246,.1);border-color:rgba(139,92,246,.3)}
+.comp-card.skill{background:rgba(0,200,232,.08);border-color:rgba(0,200,232,.25)}
+.comp-card.agente{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.25)}
+.comp-card.harness{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.25)}
+.comp-num{font-size:.68rem;font-weight:700;letter-spacing:.1em;margin-bottom:6px}
+.comp-num.prompt{color:var(--purple)}.comp-num.skill{color:var(--cyan)}
+.comp-num.agente{color:var(--amber)}.comp-num.harness{color:var(--coral)}
+.comp-name{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:5px}
+.comp-tag{font-size:.8rem;color:var(--muted);line-height:1.4}
+
+/* trilha badge */
+.tbadge{display:inline-flex;align-items:center;gap:5px;font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:12px}
+.tbadge.g{background:rgba(0,200,232,.12);color:var(--cyan);border:1px solid rgba(0,200,232,.3)}
+.tbadge.c{background:rgba(249,115,22,.12);color:var(--coral);border:1px solid rgba(249,115,22,.3)}
+.tbadge.n{background:rgba(0,204,106,.12);color:var(--green);border:1px solid rgba(0,204,106,.3)}
+
+/* checklist */
+.checklist{display:grid;gap:8px;margin-top:4px}
+.ci{display:flex;align-items:flex-start;gap:10px;background:var(--bg-card);border:1px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s;user-select:none}
+.ci:hover{border-color:var(--border-bright)}
+.ci.done{border-color:rgba(0,204,106,.35);background:rgba(0,204,106,.04)}
+.ci-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--muted);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:all .2s;color:#000}
+.ci.done .ci-box{background:var(--green);border-color:var(--green)}
+.ci-text{font-size:.9rem;line-height:1.4;color:var(--text)}
+
+/* ─── GUIDE PANEL ─── */
+.guide-panel{width:300px;flex-shrink:0;border-left:1px solid var(--border);background:var(--bg-card2);display:flex;flex-direction:column;overflow:hidden}
+@media(max-width:1100px){.guide-panel{width:260px}}
+@media(max-width:800px){.guide-panel{display:none}}
+.guide-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.guide-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.guide-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.guide-section{display:flex;flex-direction:column;gap:5px}
+.guide-section-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.guide-section-label.concept{color:var(--purple)}
+.guide-section-label.step{color:var(--cyan)}
+.guide-section-label.result{color:var(--green)}
+.guide-section-text{font-size:.82rem;color:var(--text);line-height:1.55}
+.guide-audio{border-top:1px solid var(--border);padding:12px 16px;display:flex;flex-direction:column;gap:7px;flex-shrink:0}
+.audio-row{display:flex;gap:6px}
+.audio-btn{flex:1;padding:7px 6px;border-radius:7px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px}
+.audio-btn:hover{border-color:var(--border-bright);background:var(--border)}
+.audio-btn.primary{background:rgba(0,200,232,.1);border-color:rgba(0,200,232,.3);color:var(--cyan)}
+.audio-btn.primary:hover{background:rgba(0,200,232,.18)}
+.audio-btn.danger{background:rgba(249,115,22,.08);border-color:rgba(249,115,22,.25);color:var(--coral)}
+.audio-status{font-size:.72rem;color:var(--muted);text-align:center;min-height:16px}
+
+/* ─── JUMP MENU ─── */
+.jump-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+.jump-overlay.open{display:flex}
+.jump-modal{background:var(--bg-card);border:1px solid var(--border-bright);border-radius:16px;width:min(540px,94vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+.jump-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.jump-title{font-size:.85rem;font-weight:700;color:#fff}
+.jump-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .2s}
+.jump-close:hover{color:#fff}
+.jump-body{overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.jump-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent}
+.jump-item:hover{background:var(--bg-card2);border-color:var(--border)}
+.jump-item.current{background:rgba(0,200,232,.07);border-color:rgba(0,200,232,.2)}
+.jump-num{font-size:.68rem;font-weight:700;color:var(--muted);min-width:24px}
+.jump-mod{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1px}
+.jump-label{font-size:.85rem;color:var(--text);line-height:1.3}
+.jump-check{margin-left:auto;font-size:.75rem;color:var(--green)}
+
+/* ─── FERRAMENTAS ─── */
+.tools-section{border-top:1px solid var(--border);padding:12px 16px;flex-shrink:0}
+.tools-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--muted);margin-bottom:8px}
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.tool-btn{display:flex;align-items:center;gap:6px;padding:7px 9px;background:var(--bg-card);border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all .18s;text-decoration:none;color:var(--text);font-size:.75rem;font-weight:600}
+.tool-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tool-icon{font-size:.95rem;flex-shrink:0}
+
+/* ─── NAV BAR ─── */
+.navbar{padding:12px 24px;border-top:1px solid var(--border);background:rgba(9,16,31,.9);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.nav-left{display:flex;gap:8px}
+.nav-right{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:7px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{border-color:var(--border-bright);background:var(--border)}
+.btn.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700}
+.btn.primary:hover{opacity:.9}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--text);background:var(--bg-card)}
+.btn.done-btn{background:rgba(0,204,106,.1);border-color:rgba(0,204,106,.3);color:var(--green)}
+.btn.done-btn:hover{background:rgba(0,204,106,.18)}
+.btn.done-btn.marked{background:rgba(0,204,106,.25);border-color:var(--green)}
+
+/* ─── TELA FINAL ─── */
+#final-screen{display:none;flex-direction:column;align-items:center;justify-content:flex-start;gap:0;padding:48px 32px;overflow-y:auto;max-width:900px;margin:0 auto;width:100%}
+.final-trophy{font-size:3.5rem;margin-bottom:12px}
+.final-h1{font-size:2rem;font-weight:800;color:#fff;text-align:center;margin-bottom:.4rem}
+.final-h1 em{color:var(--green);font-style:normal}
+.final-sub{font-size:.95rem;color:var(--muted);text-align:center;margin-bottom:2.4rem;line-height:1.6;max-width:520px}
+.final-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;width:100%;margin-bottom:24px}
+@media(max-width:600px){.final-grid{grid-template-columns:1fr}}
+.final-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.final-card h4{margin-bottom:10px;font-size:.95rem}
+.final-summary{background:rgba(0,204,106,.06);border:1px solid rgba(0,204,106,.2);border-radius:12px;padding:20px;width:100%;margin-bottom:20px;text-align:center}
+.final-summary p{font-size:1.1rem;font-weight:600;color:#fff;line-height:1.5}
+.final-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ PORTAL ═══════════════ -->
+<div id="portal">
+  <div id="resume-banner">
+    <strong>Você tem progresso salvo.</strong> Quer continuar de onde parou na <span id="resume-trilha-name"></span>?
+    <button onclick="continuarSalvo()">Continuar →</button>
+    <button onclick="document.getElementById('resume-banner').style.display='none'" style="background:transparent;border:1px solid var(--border);color:var(--muted);margin-left:6px">Começar do zero</button>
+  </div>
+  <p class="eyebrow">Conta Azul · Trilha de Aprendizagem</p>
+  <h1 class="portal-h1">Construa seu<br><em>Assistente de Área</em></h1>
+  <p class="portal-sub">Escolha seu ecossistema e siga a trilha no seu ritmo — sem vídeos, sem apresentações ao vivo. Você lê, pratica e avança quando estiver pronto.</p>
+  <div class="trilha-grid">
+    <div class="trilha-card" data-t="google" onclick="iniciarTrilha('google')">
+      <div class="t-icon g">🔵</div>
+      <div class="t-name">Google Workspace + Gemini</div>
+      <div class="t-desc">Para quem já usa Gmail, Docs e Sheets no dia a dia.</div>
+      <div class="t-tags"><span class="tag">Gemini Gems</span><span class="tag">NotebookLM</span><span class="tag">AppScript</span></div>
+      <div class="t-cta g">Começar esta trilha →</div>
+    </div>
+    <div class="trilha-card" data-t="claude" onclick="iniciarTrilha('claude')">
+      <div class="t-icon c">🟠</div>
+      <div class="t-name">Claude · Anthropic</div>
+      <div class="t-desc">Para quem tem acesso ao Claude e quer configurar um assistente avançado.</div>
+      <div class="t-tags"><span class="tag">Claude Projects</span><span class="tag">Skills</span><span class="tag">Claude Code</span></div>
+      <div class="t-cta c">Começar esta trilha →</div>
+    </div>
+    <div class="trilha-card" data-t="n8n" onclick="iniciarTrilha('n8n')">
+      <div class="t-icon n">🟢</div>
+      <div class="t-name">n8n · Automação</div>
+      <div class="t-desc">Para criar fluxos automáticos que integram IA com sistemas da empresa.</div>
+      <div class="t-tags"><span class="tag">n8n Workflows</span><span class="tag">LLM Nodes</span><span class="tag">APIs</span></div>
+      <div class="t-cta n">Começar esta trilha →</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="app">
+  <!-- top bar -->
+  <div class="topbar">
+    <div class="mod-badge" id="modBadge">MÓDULO 0</div>
+    <div class="progress-wrap">
+      <div class="progress-labels">
+        <span id="progLabel">Etapa 1 de 27</span>
+        <span id="progPct">0% concluído</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+    <div class="step-counter" id="stepCounter">1 / 27</div>
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <button class="btn" style="font-size:.75rem;padding:6px 11px" onclick="openJump()">☰ Ir para...</button>
+      <button class="btn ghost" style="font-size:.75rem;padding:6px 11px" onclick="trocarTrilha()">↔ Trilha</button>
+    </div>
+  </div>
+
+  <!-- body -->
+  <div class="body-layout" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+    <div style="display:flex;flex:1;overflow:hidden">
+      <!-- main -->
+      <div class="main-col" id="mainCol">
+        <!-- etapas geradas via JS -->
+      </div>
+      <!-- guide -->
+      <div class="guide-panel">
+        <div class="guide-header">
+          <span class="guide-title">📖 O que fazer agora</span>
+        </div>
+        <div class="guide-body" id="guideBody">
+          <div class="guide-section">
+            <div class="guide-section-label concept">Conceito</div>
+            <div class="guide-section-text" id="gConcept">—</div>
+          </div>
+          <div class="guide-section">
+            <div class="guide-section-label step">Passo prático</div>
+            <div class="guide-section-text" id="gStep">—</div>
+          </div>
+          <div class="guide-section">
+            <div class="guide-section-label result">Resultado esperado</div>
+            <div class="guide-section-text" id="gResult">—</div>
+          </div>
+        </div>
+        <div class="guide-audio">
+          <div class="audio-row">
+            <button class="audio-btn primary" id="audioPlayBtn" onclick="audioPlay()">▶ Ouvir</button>
+            <button class="audio-btn" id="audioPauseBtn" onclick="audioPause()" style="display:none">⏸ Pausar</button>
+            <button class="audio-btn" id="audioRestartBtn" onclick="audioRestart()" style="display:none">↺ Reiniciar</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+            <span style="font-size:.68rem;color:var(--muted);white-space:nowrap">Velocidade</span>
+            <input type="range" id="audioSpeed" min="0.5" max="3" step="0.25" value="1"
+              style="flex:1;accent-color:var(--accent)"
+              oninput="const label=document.getElementById('audioSpeedLabel');if(label)label.textContent=this.value+'×'">
+            <span id="audioSpeedLabel" style="font-size:.72rem;color:var(--muted);min-width:28px;text-align:right">1×</span>
+          </div>
+          <div class="audio-status" id="audioStatus"></div>
+        </div>
+      </div>
+      <!-- ferramentas -->
+      <div class="tools-section" id="toolsSection">
+        <div class="tools-label">🔗 Abrir ferramenta</div>
+        <div class="tools-grid" id="toolsGrid"></div>
+      </div>
+    </div>
+
+    <!-- nav -->
+    <div class="navbar">
+      <div class="nav-left">
+        <button class="btn ghost" onclick="reiniciarTrilha()">↩ Reiniciar trilha</button>
+        <button class="btn" id="prevBtn" onclick="navigate(-1)">◀ Voltar</button>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn done-btn" id="doneBtn" onclick="toggleDone()">☐ Marcar concluído</button>
+        <button class="btn primary" id="nextBtn" onclick="navigate(1)">Próxima etapa ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- final screen -->
+  <div id="final-screen">
+    <div class="final-trophy">🏆</div>
+    <h1 class="final-h1">Trilha concluída!</h1>
+    <p class="final-sub" id="finalSub">Você construiu seu Assistente de Área do zero. Aqui está um resumo do que foi criado.</p>
+    <div class="final-summary">
+      <p id="finalQuote">"Usar IA bem não é escrever prompts maiores. É transformar conhecimento em sistema."</p>
+    </div>
+    <div class="final-grid" id="finalGrid"></div>
+    <div class="checklist" id="finalChecklist" style="width:100%;margin-bottom:24px"></div>
+    <div class="final-actions">
+      <button class="btn primary" onclick="reiniciarTrilha()">↩ Refazer trilha</button>
+      <button class="btn" onclick="trocarTrilha()">↔ Trocar trilha</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DADOS DAS ETAPAS
+   Cada etapa: { id, modulo, trilha (''|'google'|'claude'|'n8n'),
+     titulo, html, guide:{concept,step,result}, audio }
+═══════════════════════════════════════════ */
+const ETAPAS = [
+
+/* ─── MÓDULO 0 ─── */
+{id:'m0-1',modulo:'MÓDULO 0 — Por que mudar?',trilha:'',
+titulo:'De usuário de IA a arquiteto do seu trabalho',
+html:`
+<h1>De usuário de IA<br>a <em>arquiteto</em> do seu trabalho</h1>
+<p>Nesta trilha, você vai construir passo a passo um <strong>Assistente de Área</strong> — um sistema de IA configurado para a sua função na Conta Azul.</p>
+<div class="g4" style="margin-top:16px">
+  <div class="card cyan"><h4>Módulo 0</h4><p style="font-size:.88rem">Por que prompts sozinhos não escalam</p></div>
+  <div class="card cyan"><h4>Módulo 1</h4><p style="font-size:.88rem">Skill: o padrão que você para de reexplicar</p></div>
+  <div class="card cyan"><h4>Módulos 2–3</h4><p style="font-size:.88rem">Agente + Subagente + Harness</p></div>
+  <div class="card cyan"><h4>Módulo 4</h4><p style="font-size:.88rem">Seu Assistente de Área funcionando</p></div>
+</div>
+<div class="block hook" style="margin-top:8px">Ao final desta trilha, você terá um sistema que executa tarefas recorrentes da sua área sem precisar de prompts repetidos e com aprovação humana nos pontos certos.</div>
+`,
+guide:{
+  concept:'Esta trilha é autodidata: você lê, pratica e avança no seu ritmo. Não há vídeo nem apresentação ao vivo.',
+  step:'Leia o mapa dos módulos acima e anote mentalmente: qual desses módulos parece mais urgente para o seu trabalho hoje?',
+  result:'Você sabe o que vai aprender e tem uma expectativa do que vai construir.'
+},
+audio:'Bem-vindo à trilha. Aqui você vai aprender a sair do uso básico de prompts e construir um Assistente de Área real. A trilha tem quatro módulos práticos. No Módulo 0 você entende por que prompts sozinhos têm limite. No Módulo 1 você cria sua primeira Skill. Nos módulos 2 e 3 você monta o fluxo com Agente, Subagente e Harness. No Módulo 4 você integra tudo. Leia com calma, faça os exercícios e marque cada etapa quando concluir.'
+},
+
+{id:'m0-2',modulo:'MÓDULO 0 — Diagnóstico',trilha:'',
+titulo:'Você está carregando o processo todo na memória?',
+html:`
+<h2>Diagnóstico pessoal</h2>
+<div class="block diag">
+  <div class="block-label">⚡ Reflita antes de continuar</div>
+  <p>Pense numa tarefa que você faz com IA toda semana.<br>Quantas vezes você reescreve as mesmas instruções?</p>
+</div>
+<div class="g2" style="margin-top:4px">
+  <div class="card amber">
+    <h4>Se a resposta é "muitas vezes"...</h4>
+    <p style="font-size:.9rem">Você está carregando o processo todo na memória. A IA executa bem quando você instrui bem — mas esquece tudo quando a conversa fecha.</p>
+  </div>
+  <div class="card">
+    <h4>O que muda com esta trilha</h4>
+    <p style="font-size:.9rem">Você vai transformar esse conhecimento repetido em estrutura. A IA vai aplicar as regras automaticamente — sem precisar ser relembrada toda vez.</p>
+  </div>
+</div>
+<div class="block do" style="margin-top:8px">
+  <div class="block-label">Faça agora</div>
+  <p>Anote 3 tarefas que você faz repetidamente com IA esta semana. Elas serão o material do seu projeto ao longo da trilha.</p>
+</div>
+`,
+guide:{
+  concept:'Prompts isolados funcionam para tarefas únicas. Quando o processo se repete, você precisa de estrutura — não de prompts maiores.',
+  step:'Anote 3 tarefas repetitivas que você faz com IA. Qualquer lugar serve: papel, bloco de notas, um doc.',
+  result:'Você tem 3 tarefas concretas que vão guiar sua prática durante toda a trilha.'
+},
+audio:'Leia com atenção: pense numa tarefa que você faz com IA toda semana. Pode ser redigir um comunicado, resumir documentos, responder e-mails ou montar relatórios. Agora pense: quantas vezes você reescreve as mesmas instruções para essa tarefa? Se a resposta é muitas vezes, você está carregando o processo na memória. Isso não escala. Esta etapa é sobre reconhecer esse padrão. Antes de avançar, anote três tarefas repetitivas que você faz com IA. Elas serão o material prático desta trilha inteira.'
+},
+
+{id:'m0-3',modulo:'MÓDULO 0 — Os 4 componentes',trilha:'',
+titulo:'Os 4 componentes do seu Assistente de Área',
+html:`
+<h2>Os 4 componentes</h2>
+<p>A diferença entre usar IA e ter um Assistente de Área está nesses quatro componentes funcionando juntos:</p>
+<div class="comp-row" style="margin-top:14px">
+  <div class="comp-card prompt">
+    <div class="comp-num prompt">NÍVEL 1</div>
+    <div class="comp-name">Prompt</div>
+    <div class="comp-tag">Instrução pontual para tarefa única. Funciona — mas não escala.</div>
+  </div>
+  <div class="comp-card skill">
+    <div class="comp-num skill">NÍVEL 2</div>
+    <div class="comp-name">Skill</div>
+    <div class="comp-tag">Padrão salvo. Tom, regras e critérios da área. A IA aplica sempre, sem você repetir.</div>
+  </div>
+  <div class="comp-card agente">
+    <div class="comp-num agente">NÍVEL 3</div>
+    <div class="comp-name">Agente + Subagente</div>
+    <div class="comp-tag">Coordenador que planeja e delega. Subagente processa o volume pesado.</div>
+  </div>
+  <div class="comp-card harness">
+    <div class="comp-num harness">NÍVEL 4</div>
+    <div class="comp-name">Harness</div>
+    <div class="comp-tag">Conecta a IA a ferramentas reais e define onde você aprova antes de avançar.</div>
+  </div>
+</div>
+<div class="block key" style="margin-top:12px">A diferença entre usar IA e ter um Assistente de Área está nesses quatro componentes funcionando juntos.</div>
+`,
+guide:{
+  concept:'Cada componente resolve um problema diferente. Prompt para tarefas únicas. Skill para padrões repetitivos. Agente para fluxos. Harness para controle.',
+  step:'Releia os 4 componentes e associe cada um a uma das 3 tarefas que você anotou na etapa anterior.',
+  result:'Você sabe qual componente vai precisar para cada tarefa da sua área.'
+},
+audio:'Esta etapa apresenta os quatro componentes que você vai construir nesta trilha. Primeiro, o Prompt: uma instrução pontual para uma tarefa única. É o ponto de partida, mas não escala. Segundo, a Skill: um padrão salvo com as regras da sua área. A IA aplica automaticamente, sem você repetir. Terceiro, o Agente e o Subagente: o coordenador que divide o trabalho em etapas e delega a parte pesada para o subagente, que processa volume grande em isolamento. Quarto, o Harness: a estrutura que conecta a IA a ferramentas reais e define onde você precisa aprovar antes de qualquer envio. Esses quatro componentes, combinados, formam o Assistente de Área.'
+},
+
+{id:'m0-4',modulo:'MÓDULO 0 — Tabela de decisão',trilha:'',
+titulo:'Quando usar cada componente',
+html:`
+<h2>Quando usar cada componente</h2>
+<p>Use esta tabela como referência ao longo de toda a trilha — e depois no seu trabalho real:</p>
+<table>
+  <thead><tr><th>Situação no seu trabalho</th><th>Componente certo</th><th>Exemplo CA</th></tr></thead>
+  <tbody>
+    <tr><td>Tarefa pontual, não vai repetir</td><td><strong>Prompt</strong></td><td>"Resuma este e-mail de reclamação"</td></tr>
+    <tr><td>Processo que se repete com as mesmas regras</td><td><strong>Skill</strong></td><td>Comunicados internos sempre no tom da CA</td></tr>
+    <tr><td>Processar volume grande (muitos docs, dados)</td><td><strong>Subagente</strong></td><td>Analisar 80 currículos de uma vez</td></tr>
+    <tr><td>Múltiplas etapas encadeadas</td><td><strong>Agente</strong></td><td>Triagem → análise → priorização → relatório</td></tr>
+    <tr><td>Processo toca dados sensíveis ou saída externa</td><td><strong>Harness</strong></td><td>Aprovação obrigatória antes de qualquer envio</td></tr>
+  </tbody>
+</table>
+<div class="block do" style="margin-top:8px">
+  <div class="block-label">Faça agora</div>
+  <p>Pegue as 3 tarefas que você anotou. Para cada uma, classifique: qual linha desta tabela ela se encaixa? Isso vai guiar os labs práticos adiante.</p>
+</div>
+`,
+guide:{
+  concept:'Usar o componente errado é a causa mais comum de frustração com IA. Esta tabela evita isso.',
+  step:'Classifique suas 3 tarefas usando a tabela. Escreva ao lado de cada uma: Prompt, Skill, Subagente, Agente ou Harness.',
+  result:'Você tem um mapa claro de qual componente criar para cada necessidade da sua área.'
+},
+audio:'Nesta etapa você aprende a escolher o componente certo para cada situação. A tabela tem cinco linhas. Para tarefas únicas, use prompt. Para processos repetitivos com as mesmas regras, crie uma Skill. Para processar volume grande de documentos ou dados, use um Subagente. Para fluxos com múltiplas etapas encadeadas, use um Agente. E sempre que o processo tocar dados sensíveis ou comunicações externas, ative o Harness com aprovação humana. Antes de avançar, pegue as três tarefas que você anotou e classifique cada uma usando esta tabela.'
+},
+
+{id:'m0-5',modulo:'MÓDULO 0 — Projeto conectivo',trilha:'',
+titulo:'O projeto: seu Assistente de Área',
+html:`
+<h2>O que você vai construir</h2>
+<p>Durante toda a trilha, você vai construir um projeto real: o <strong>Assistente de Área</strong>. Não é um exercício genérico — é configurado para <em>a sua função</em>.</p>
+<div class="g3" style="margin-top:8px">
+  <div class="card">
+    <h4>Atendimento / CS</h4>
+    <ul style="font-size:.85rem"><li>Rascunha respostas para clientes</li><li>Classifica e prioriza chamados</li><li>Gera relatório semanal de recorrências</li></ul>
+  </div>
+  <div class="card coral">
+    <h4>RH / DP / Remuneração</h4>
+    <ul style="font-size:.85rem"><li>Revisa vagas com linguagem inclusiva</li><li>Prepara roteiros de entrevista</li><li>Adapta comunicados por público</li></ul>
+  </div>
+  <div class="card purple">
+    <h4>Vendas / Estratégia</h4>
+    <ul style="font-size:.85rem"><li>Prepara briefings de reunião</li><li>Estrutura propostas comerciais</li><li>Resume relatórios em insights acionáveis</li></ul>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste na sua ferramenta</div>
+  <p>Identifique qual dos exemplos acima é mais próximo da sua área. Se a sua área não aparece aqui, escreva sua versão: qual tarefa repetitiva você mais quer automatizar?</p>
+</div>
+`,
+guide:{
+  concept:'O projeto conectivo garante que você aprende fazendo com conteúdo real, não com exemplos genéricos.',
+  step:'Escolha ou escreva a tarefa principal que o seu Assistente de Área vai executar ao final desta trilha.',
+  result:'Você tem uma meta concreta: ao final da trilha, o que o seu assistente vai fazer que hoje você faz manualmente?'
+},
+audio:'Esta etapa define o projeto que vai percorrer toda a trilha. O Assistente de Área é configurado para a sua função específica na Conta Azul. Se você é de Atendimento, ele vai rascunhar respostas, classificar chamados e gerar relatórios. Se é de RH, vai revisar vagas, preparar roteiros de entrevista e adaptar comunicados. Se é de Vendas ou Estratégia, vai preparar briefings e estruturar propostas. Antes de avançar, defina qual tarefa principal o seu Assistente de Área vai executar. Essa é a sua meta para toda a trilha.'
+},
+
+/* ─── MÓDULO 1 ─── */
+{id:'m1-1',modulo:'MÓDULO 1 — Skill',trilha:'',
+titulo:'Skill: o padrão que você para de reexplicar',
+html:`
+<h1>Módulo 1<br><em>Skill</em></h1>
+<div class="block learn">
+  <div class="block-label">Você vai aprender</div>
+  <ul><li>O que é uma Skill e por que ela existe</li><li>Como configurar a Skill da sua área uma única vez</li><li>Como testar se a Skill está funcionando corretamente</li></ul>
+</div>
+<div class="block why" style="margin-top:8px">
+  <div class="block-label">Por que isso importa</div>
+  <p>Sem Skill, você repete as mesmas instruções toda vez que abre uma nova conversa com IA. Com Skill, a IA já começa sabendo as regras da sua área — tom de voz, padrões, restrições. Você foca no pedido, não na configuração.</p>
+</div>
+`,
+guide:{
+  concept:'Skill é o primeiro componente do seu Assistente de Área. É como um manual de boas práticas que a IA lê automaticamente antes de qualquer tarefa.',
+  step:'Leia os dois blocos desta etapa com atenção. O primeiro descreve o que você vai aprender. O segundo explica por que isso resolve um problema real.',
+  result:'Você entende o problema que a Skill resolve e está pronto para criar a sua.'
+},
+audio:'Nesta etapa você começa o Módulo 1, dedicado a criar a sua primeira Skill. A Skill é o componente que resolve o problema de ter que reexplicar as regras da sua área toda vez. Você vai aprender o que é uma Skill, como configurar a da sua área uma única vez, e como testar se ela está funcionando. Por que isso importa? Porque sem Skill, você repete o mesmo contexto toda semana. Com Skill, a IA já começa cada conversa sabendo as regras. Você só precisa dizer o que fazer.'
+},
+
+{id:'m1-2',modulo:'MÓDULO 1 — O problema',trilha:'',
+titulo:'O problema que a Skill resolve',
+html:`
+<h2>Sem Skill versus com Skill</h2>
+<div class="g2">
+  <div class="card amber">
+    <h4>Sem Skill — toda semana</h4>
+    <ul style="font-size:.9rem"><li>Você explica o tom de voz da empresa</li><li>Define o público e o canal</li><li>Lista restrições e termos proibidos</li><li>A IA esquece tudo quando a conversa fecha</li></ul>
+  </div>
+  <div class="card">
+    <h4>Com Skill — uma vez só</h4>
+    <ul style="font-size:.9rem"><li>Você configura o padrão uma única vez</li><li>Toda conversa nova começa com o contexto certo</li><li>A IA aplica as regras sem precisar ser lembrada</li><li>Você só diz o que fazer — não mais como fazer</li></ul>
+  </div>
+</div>
+<div class="block key" style="margin-top:12px">Skill é conhecimento padronizado que não precisa ser reexplicado toda vez.</div>
+`,
+guide:{
+  concept:'A diferença entre "sem Skill" e "com Skill" é a diferença entre usar IA como ferramenta e usar IA como assistente configurado.',
+  step:'Pense nas regras que você mais repete quando usa IA na sua área. Anote pelo menos 3: tom de voz, público, canal, restrições, formato de entrega.',
+  result:'Você tem uma lista das regras que vão compor a Skill da sua área.'
+},
+audio:'Esta etapa mostra o problema que a Skill resolve de forma prática. Sem Skill, você passa parte do tempo com IA reexplicando as mesmas coisas: o tom de voz da empresa, para quem está escrevendo, o canal, as restrições. A IA executa bem, mas esquece tudo quando a conversa fecha. Com Skill, você configura isso uma única vez. Toda conversa nova já começa com a IA sabendo as regras da sua área. Antes de avançar, anote pelo menos três regras que você mais repete quando usa IA no trabalho.'
+},
+
+{id:'m1-3',modulo:'MÓDULO 1 — Lab Google',trilha:'google',
+titulo:'Lab: criando seu Gem no Gemini',
+html:`
+<div class="tbadge g">🔵 Trilha Google</div>
+<h2>Criando seu Gem de área</h2>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Nesta etapa você vai</div>
+  <p>Criar um Gem personalizado no Gemini com as regras da sua área — sua primeira Skill funcionando.</p>
+</div>
+<div class="g2">
+  <div>
+    <h3>Passo a passo:</h3>
+    <ol style="margin-top:8px"><li>Abra o <strong>Gemini Advanced</strong> → clique em <strong>Gems</strong> no menu lateral</li><li>Clique em <strong>Criar novo Gem</strong></li><li>Nome: <em>"Assistente [Sua Área] — CA"</em></li><li>No campo de instruções, cole o template ao lado adaptado para sua área</li><li>Salve e teste com uma tarefa real</li></ol>
+  </div>
+  <div>
+    <h3>Template de instruções:</h3>
+    <pre>Você é o assistente da área [ÁREA]
+da Conta Azul.
+
+Tom de voz: direto, humano, sem
+jargão corporativo.
+Público padrão: colaboradores internos.
+Canal padrão: Slack e e-mail interno.
+
+Regras fixas:
+- Nunca usar linguagem de cobrança.
+- Textos curtos: máximo 5 parágrafos.
+- Sempre terminar com ação clara.
+
+Antes de entregar, verifique se o
+texto cumpre todas essas regras.</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste na sua ferramenta</div>
+  <p>Após criar o Gem, envie este prompt de teste: <em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em> A resposta deve vir no tom e formato corretos da sua área.</p>
+</div>
+`,
+guide:{
+  concept:'Um Gem no Gemini é uma versão configurada da IA com instruções fixas. É a sua Skill no ecossistema Google.',
+  step:'Crie o Gem agora seguindo os 5 passos ao lado. Adapte o template com o nome real da sua área e as regras específicas do seu time.',
+  result:'Você tem um Gem criado e testado com uma tarefa real. A resposta vem com o tom e o formato corretos sem você precisar explicar.'
+},
+audio:'Nesta etapa você cria sua primeira Skill no ecossistema Google: um Gem personalizado no Gemini. Siga os cinco passos. Primeiro, abra o Gemini Advanced e clique em Gems no menu lateral. Segundo, clique em Criar novo Gem. Terceiro, dê o nome "Assistente" seguido da sua área e "CA". Quarto, no campo de instruções, cole o template que aparece na tela e adapte para a sua área real. Quinto, salve e teste com o prompt de comunicado sugerido. O resultado esperado é uma resposta que já vem no tom da sua área sem você precisar explicar nada.'
+},
+
+{id:'m1-4',modulo:'MÓDULO 1 — Lab Claude',trilha:'claude',
+titulo:'Lab: criando seu Project no Claude',
+html:`
+<div class="tbadge c">🟠 Trilha Claude</div>
+<h2>Criando seu Project e Skill</h2>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Nesta etapa você vai</div>
+  <p>Criar um Project no Claude com instruções fixas da sua área — sua Skill configurada e funcionando.</p>
+</div>
+<div class="g2">
+  <div>
+    <h3>Passo a passo:</h3>
+    <ol style="margin-top:8px"><li>Acesse <strong>claude.ai</strong> → clique em <strong>Projetos</strong> no menu</li><li>Crie um novo projeto: <em>"Assistente [Sua Área] — CA"</em></li><li>Abra <strong>Instruções do projeto</strong> e cole o template ao lado</li><li>Adicione um arquivo <strong>regras_de_area.md</strong> com suas regras específicas</li><li>Teste dentro do projeto com uma tarefa real</li></ol>
+  </div>
+  <div>
+    <h3>Template de instruções:</h3>
+    <pre>Você é o assistente da área [ÁREA]
+da Conta Azul.
+
+Sempre que escrever qualquer comunicação:
+- Tom direto e humano, sem corporativês.
+- Formato ao canal: Slack (curto),
+  e-mail (com assunto e saudação).
+- Nunca usar linguagem de cobrança.
+- Finalizar com uma ação clara.
+
+Antes de entregar, confirme que o
+texto segue todas as regras acima.</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste na sua ferramenta</div>
+  <p>Dentro do Project criado, envie: <em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em> Verifique se o tom e o formato vieram corretos sem precisar explicar nada.</p>
+</div>
+`,
+guide:{
+  concept:'Um Project no Claude é uma pasta de trabalho permanente com instruções fixas. Tudo que você criar dentro dele usa automaticamente as regras da Skill.',
+  step:'Crie o Project agora seguindo os 5 passos. Adapte o template com o nome real da sua área e as regras do seu time.',
+  result:'Você tem um Project criado com Skill ativa. Uma conversa dentro do projeto já começa com o contexto certo.'
+},
+audio:'Nesta etapa você cria sua Skill no Claude: um Project com instruções permanentes. Siga os cinco passos. Primeiro, acesse claude.ai e clique em Projetos. Segundo, crie um novo projeto com o nome da sua área. Terceiro, abra as Instruções do projeto e cole o template adaptado para sua área. Quarto, adicione um arquivo de regras com os detalhes específicos do seu time. Quinto, teste dentro do projeto com o prompt de comunicado sugerido. O resultado esperado é que a resposta venha no tom certo sem você explicar nada extra.'
+},
+
+{id:'m1-5',modulo:'MÓDULO 1 — Lab n8n',trilha:'n8n',
+titulo:'Lab: criando o System Prompt reutilizável no n8n',
+html:`
+<div class="tbadge n">🟢 Trilha n8n</div>
+<h2>Criando o nó de Skill no n8n</h2>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Nesta etapa você vai</div>
+  <p>Criar um workflow base no n8n com um System Prompt reutilizável — sua Skill aplicada a todos os fluxos da área.</p>
+</div>
+<div class="g2">
+  <div>
+    <h3>Passo a passo:</h3>
+    <ol style="margin-top:8px"><li>Abra o n8n → crie workflow: <em>"Assistente [Área] — CA"</em></li><li>Adicione nó <strong>Manual Trigger</strong> como entrada</li><li>Adicione nó <strong>AI Agent</strong> ou <strong>Chat Model</strong></li><li>No campo <strong>System Message</strong>, cole o template ao lado</li><li>Salve como template reutilizável para próximos fluxos</li></ol>
+  </div>
+  <div>
+    <h3>Template do System Message:</h3>
+    <pre>Você é o assistente da área [ÁREA]
+da Conta Azul.
+
+Regras para TODAS as respostas:
+- Tom: direto, humano, sem jargão.
+- Público: colaboradores internos.
+- Canal: Slack ou e-mail (adaptar).
+- Proibido: linguagem de cobrança.
+- Sempre: terminar com ação clara.
+
+Input do usuário: {{ $json.input }}
+Siga as regras acima para gerar
+o output.</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste na sua ferramenta</div>
+  <p>Execute o workflow com o input: <em>"Comunicado de pesquisa de clima — começa semana que vem"</em>. Verifique se o output vem no tom e formato corretos sem instruções extras.</p>
+</div>
+`,
+guide:{
+  concept:'No n8n, a Skill é um System Message fixo dentro de um nó de LLM. Ele é aplicado automaticamente em todos os fluxos que usarem esse nó como base.',
+  step:'Crie o workflow base agora seguindo os 5 passos. Adapte o template com as regras reais da sua área.',
+  result:'Você tem um workflow base com Skill ativa. Qualquer fluxo que copiar este template já começa com as regras da sua área.'
+},
+audio:'Nesta etapa você cria sua Skill no n8n: um System Message reutilizável dentro de um nó de LLM. Siga os cinco passos. Primeiro, abra o n8n e crie um novo workflow com o nome da sua área. Segundo, adicione um nó Manual Trigger como entrada. Terceiro, adicione um nó AI Agent ou Chat Model. Quarto, no campo System Message, cole o template adaptado para sua área. Quinto, salve como template para reutilizar em fluxos futuros. O teste é executar o workflow com o input sugerido e verificar se o output vem com o padrão da sua área.'
+},
+
+{id:'m1-6',modulo:'MÓDULO 1 — Fechamento',trilha:'',
+titulo:'Módulo 1 concluído',
+html:`
+<h2>O que você construiu no Módulo 1</h2>
+<ul><li>Entendeu o problema que a Skill resolve</li><li>Criou a Skill da sua área na ferramenta escolhida</li><li>Testou com uma tarefa real e confirmou que funciona</li></ul>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Marque quando concluir</div>
+  <p>Antes de avançar, confirme que sua Skill está criada e testada. Se a resposta da IA veio com o padrão certo sem você explicar as regras, o Módulo 1 está completo.</p>
+</div>
+<div class="checklist" style="margin-top:12px">
+  <div class="ci" onclick="toggleCi(this,'m1-skill-criada')"><div class="ci-box" id="cb-m1-skill-criada"></div><div class="ci-text"><strong>Skill criada</strong> — configurei as regras da minha área na ferramenta</div></div>
+  <div class="ci" onclick="toggleCi(this,'m1-skill-testada')"><div class="ci-box" id="cb-m1-skill-testada"></div><div class="ci-text"><strong>Skill testada</strong> — a resposta veio com o tom e formato corretos sem eu explicar</div></div>
+</div>
+<div class="block hook" style="margin-top:12px">Próximo módulo: Agente + Subagente — como coordenar processos com múltiplas etapas e processar volumes grandes.</div>
+`,
+guide:{
+  concept:'O Módulo 1 é o alicerce. Sem Skill bem configurada, os componentes seguintes perdem eficiência.',
+  step:'Marque os dois checklists acima. Se algum ainda não está pronto, volte ao lab e complete antes de avançar.',
+  result:'Você tem uma Skill funcionando. O Módulo 2 vai construir em cima dela.'
+},
+audio:'Você concluiu o Módulo 1. Neste módulo você entendeu o problema da repetição de instruções, criou a Skill da sua área na ferramenta escolhida e testou com uma tarefa real. Antes de avançar, marque os dois checklists: Skill criada e Skill testada. Se a resposta da IA veio com o padrão da sua área sem você precisar explicar as regras, o Módulo 1 está completo. O próximo módulo vai adicionar o segundo e o terceiro componentes: o Agente e o Subagente.'
+},
+
+/* ─── MÓDULO 2 ─── */
+{id:'m2-1',modulo:'MÓDULO 2 — Agente + Subagente',trilha:'',
+titulo:'Agente + Subagente: dividir para conquistar',
+html:`
+<h1>Módulo 2<br><em>Agente + Subagente</em></h1>
+<div class="block learn">
+  <div class="block-label">Você vai aprender</div>
+  <ul><li>A diferença entre Skill, Agente e Subagente</li><li>Quando usar cada um sem supercomplicar</li><li>Como montar um fluxo com duas etapas encadeadas</li></ul>
+</div>
+<div class="block why" style="margin-top:8px">
+  <div class="block-label">Por que isso importa</div>
+  <p>A Skill define como fazer. O Agente decide o que fazer, em que ordem, usando a Skill quando precisa. O Subagente é o especialista que processa o volume pesado — lendo 80 documentos, analisando uma planilha grande — sem poluir o fluxo principal.</p>
+</div>
+`,
+guide:{
+  concept:'Skill + Agente + Subagente é a combinação que transforma tarefas manuais repetitivas em processos automáticos coordenados.',
+  step:'Leia os dois blocos e identifique: das 3 tarefas que você anotou, qual tem mais de uma etapa encadeada? Essa é candidata para um Agente.',
+  result:'Você sabe qual tarefa da sua área vai virar um fluxo de Agente com Subagente.'
+},
+audio:'Bem-vindo ao Módulo 2. Aqui você vai aprender a coordenar processos com múltiplas etapas. A diferença entre os componentes é simples. A Skill define como fazer — o padrão. O Agente decide o que fazer e em que ordem, usando a Skill quando precisa. O Subagente é o especialista chamado para as partes pesadas: ler muitos documentos, auditar planilhas grandes, comparar arquivos. Ele processa em isolamento e entrega apenas o resumo para o Agente usar. Antes de avançar, identifique qual das suas três tarefas tem mais de uma etapa encadeada. Essa é a candidata para um fluxo de Agente.'
+},
+
+{id:'m2-2',modulo:'MÓDULO 2 — A diferença',trilha:'',
+titulo:'Como os componentes se dividem',
+html:`
+<h2>Skill, Agente e Subagente — a diferença prática</h2>
+<table>
+  <thead><tr><th>Componente</th><th>O que faz</th><th>Analogia de trabalho</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Skill</strong></td><td>Define o padrão de como executar</td><td>O manual de boas práticas da área</td></tr>
+    <tr><td><strong>Subagente</strong></td><td>Processa volumes grandes em isolamento</td><td>O estagiário que pesquisa tudo e entrega só o resumo</td></tr>
+    <tr><td><strong>Agente</strong></td><td>Coordena etapas, usa Skill, chama Subagentes</td><td>O coordenador que gerencia o projeto inteiro</td></tr>
+  </tbody>
+</table>
+<div class="block key" style="margin-top:12px">O Agente não faz tudo sozinho. Ele sabe quando delegar, quando aplicar um padrão e quando pedir sua aprovação.</div>
+`,
+guide:{
+  concept:'A separação Agente/Subagente mantém o contexto principal limpo. Isso reduz erros e melhora a qualidade do resultado final.',
+  step:'Pense no fluxo que você identificou na etapa anterior. Anote: qual parte é "pesada" (volume, análise) e qual parte é "coordenação" (decidir, montar, entregar)?',
+  result:'Você tem o mapa do fluxo: o que vai para o Subagente e o que fica no Agente.'
+},
+audio:'Esta etapa explica a diferença prática entre os três componentes com uma tabela simples. A Skill é o manual de boas práticas que define como fazer. O Subagente é como um estagiário especializado: você dá uma tarefa pesada para ele, ele processa tudo e entrega apenas o resumo. O Agente é o coordenador do projeto: ele recebe o resumo do Subagente, aplica a Skill da área e gera a entrega final. Antes de avançar, anote para o fluxo que você escolheu: qual parte é pesada, processamento de volume, e qual parte é coordenação, decidir e montar a entrega.'
+},
+
+{id:'m2-3',modulo:'MÓDULO 2 — Lab Google',trilha:'google',
+titulo:'Lab: Agente + Subagente com Gemini e NotebookLM',
+html:`
+<div class="tbadge g">🔵 Trilha Google</div>
+<h2>Lab: fluxo Agente + Subagente</h2>
+<div class="g2">
+  <div class="card">
+    <h4>Etapa 1 — Subagente: NotebookLM</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>Suba os documentos pesados no NotebookLM</li><li>Use o chat para extrair padrões e resumos</li><li>Exporte o resumo — esse é o output do Subagente</li></ol>
+  </div>
+  <div class="card cyan">
+    <h4>Etapa 2 — Agente: Gemini com Gem</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>Abra o Gem que você criou no Módulo 1</li><li>Cole o resumo do NotebookLM como contexto</li><li>Peça a entrega final: relatório, comunicado, e-mail</li></ol>
+  </div>
+</div>
+<pre style="margin-top:12px">"Com base no resumo abaixo [cole aqui], gere um relatório executivo
+seguindo as regras do nosso Gem de área.
+Formato: 3 seções, máximo 400 palavras,
+com os próximos passos ao final."</pre>
+<div class="block test" style="margin-top:10px">
+  <div class="block-label">Teste agora</div>
+  <p>Escolha um processo real da sua semana que envolva analisar vários documentos. Execute o fluxo completo: Subagente (NotebookLM) → Agente (Gemini com Gem). Compare o tempo com o processo manual.</p>
+</div>
+`,
+guide:{
+  concept:'No ecossistema Google, o NotebookLM atua como Subagente para volume pesado de documentos. O Gemini com Gem é o Agente que usa o resultado para gerar a entrega.',
+  step:'Execute o fluxo em 3 passos: suba documentos no NotebookLM, peça o resumo, depois cole o resumo no Gem do Gemini e peça a entrega final.',
+  result:'Você tem um ciclo Subagente → Agente funcionando com dados reais da sua área.'
+},
+audio:'Nesta etapa você cria o fluxo de Agente e Subagente no ecossistema Google. O NotebookLM vai ser o seu Subagente: você sobe os documentos pesados, usa o chat para extrair padrões e resumos, e exporta o resultado. Esse é o output do Subagente. Depois, abra o Gem que você criou no Módulo 1, cole o resumo do NotebookLM como contexto, e peça a entrega final usando o prompt sugerido na tela. O resultado esperado é um ciclo completo funcionando com dados reais da sua área.'
+},
+
+{id:'m2-4',modulo:'MÓDULO 2 — Lab Claude',trilha:'claude',
+titulo:'Lab: Agente + Subagente no Claude',
+html:`
+<div class="tbadge c">🟠 Trilha Claude</div>
+<h2>Lab: fluxo Agente + Subagente</h2>
+<div class="g2">
+  <div class="card">
+    <h4>Conversa do Subagente — isolada</h4>
+    <pre style="font-size:.78rem;margin-top:8px">"Você é um especialista em análise.
+Analise os documentos abaixo e entregue:
+1. 5 padrões mais recorrentes
+2. 3 pontos críticos de atenção
+3. Recomendação de priorização
+
+[Cole os documentos aqui]
+Não escreva nada além do pedido."</pre>
+  </div>
+  <div class="card cyan">
+    <h4>Conversa do Agente — no seu Project</h4>
+    <pre style="font-size:.78rem;margin-top:8px">"Com base na análise abaixo, gere
+o relatório executivo para liderança
+seguindo as regras do Project.
+
+Análise recebida:
+[output da conversa do Subagente]"</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste agora</div>
+  <p>Use um processo real da sua área com volume de documentos. Execute a conversa do Subagente primeiro, depois cole o output no Project e execute a conversa do Agente. Observe a qualidade do resultado final comparado a fazer tudo em um único prompt.</p>
+</div>
+`,
+guide:{
+  concept:'No Claude, o padrão Subagente/Agente usa duas conversas separadas. A separação mantém cada conversa focada e reduz erros.',
+  step:'Execute as duas conversas em sequência: primeiro o Subagente com os documentos pesados, depois o Agente no Project com o output do Subagente.',
+  result:'Você tem um ciclo de duas conversas funcionando. O resultado final é melhor do que tudo em um único prompt.'
+},
+audio:'Nesta etapa você cria o fluxo de Agente e Subagente no Claude usando duas conversas separadas. Primeiro, abra uma conversa nova fora do Project e cole o prompt de Subagente com os documentos da sua área. Peça a análise estruturada. Copie o output. Segundo, abra uma conversa dentro do seu Project, que já tem a Skill ativa, e cole o output do Subagente junto com o prompt de Agente. O resultado final é um relatório ou entrega que usa tanto a análise pesada quanto os padrões da sua área. Compare com fazer tudo em um único prompt: a qualidade é significativamente melhor.'
+},
+
+{id:'m2-5',modulo:'MÓDULO 2 — Lab n8n',trilha:'n8n',
+titulo:'Lab: sub-workflows no n8n',
+html:`
+<div class="tbadge n">🟢 Trilha n8n</div>
+<h2>Lab: Agente + Subagente com sub-workflows</h2>
+<div class="g2">
+  <div class="card">
+    <h4>Sub-workflow (Subagente)</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>Crie um workflow separado: <em>"Subagente — Análise de Dados"</em></li><li>Adicione nó <strong>Execute Workflow Trigger</strong> como entrada</li><li>Adicione LLM Node com prompt de análise focada</li><li>Retorne apenas o resumo estruturado em JSON</li></ol>
+  </div>
+  <div class="card green">
+    <h4>Workflow principal (Agente)</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>No workflow principal, adicione <strong>Execute Workflow</strong> apontando para o Subagente</li><li>Receba o resumo JSON do Subagente</li><li>Passe para o LLM Node com o System Message da Skill</li><li>Entregue via Slack ou e-mail</li></ol>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste agora</div>
+  <p>Execute o workflow principal com dados reais. O sub-workflow deve processar e retornar o resumo. O workflow principal deve gerar a entrega final com a Skill ativa. Verifique se os dois estão se comunicando corretamente via JSON.</p>
+</div>
+`,
+guide:{
+  concept:'No n8n, o padrão Subagente/Agente usa dois workflows: um sub-workflow que processa o volume pesado e retorna JSON, e o workflow principal que usa esse JSON para gerar a entrega.',
+  step:'Crie o sub-workflow primeiro, teste isolado, depois conecte ao workflow principal usando o nó Execute Workflow.',
+  result:'Você tem dois workflows se comunicando. O principal chama o sub e usa o resultado para gerar a entrega final.'
+},
+audio:'Nesta etapa você cria o padrão de Agente e Subagente no n8n usando dois workflows separados. Primeiro crie o sub-workflow do Subagente: um nó Execute Workflow Trigger como entrada, um LLM Node com prompt de análise focada, e retorno em JSON. Teste o sub-workflow isolado. Depois, no workflow principal, adicione um nó Execute Workflow apontando para o sub-workflow, receba o JSON com o resumo, passe para o LLM Node que usa a Skill da área, e entregue via Slack ou e-mail. O teste é executar o fluxo completo com dados reais e verificar se os dois workflows se comunicam corretamente.'
+},
+
+{id:'m2-6',modulo:'MÓDULO 2 — Fechamento',trilha:'',
+titulo:'Módulo 2 concluído',
+html:`
+<h2>O que você construiu no Módulo 2</h2>
+<ul><li>Entendeu a diferença prática entre Skill, Agente e Subagente</li><li>Criou um fluxo com duas etapas encadeadas na sua ferramenta</li><li>Testou com dados reais e comparou com o processo manual</li></ul>
+<div class="checklist" style="margin-top:12px">
+  <div class="ci" onclick="toggleCi(this,'m2-subagente')"><div class="ci-box" id="cb-m2-subagente"></div><div class="ci-text"><strong>Subagente funcionando</strong> — processei volume pesado em isolamento</div></div>
+  <div class="ci" onclick="toggleCi(this,'m2-agente')"><div class="ci-box" id="cb-m2-agente"></div><div class="ci-text"><strong>Agente coordenando</strong> — o fluxo principal usa o output do Subagente e aplica a Skill</div></div>
+</div>
+<div class="block hook" style="margin-top:12px">Próximo módulo: Harness — como conectar a IA a ferramentas reais e garantir controle com aprovação humana.</div>
+`,
+guide:{
+  concept:'Com Skill + Agente + Subagente, você tem um assistente que processa volume, aplica padrões e coordena etapas — tudo automaticamente.',
+  step:'Marque os dois checklists. Se algum ainda não está pronto, volte ao lab e complete antes de avançar.',
+  result:'Você tem o fluxo de Agente e Subagente funcionando. O Módulo 3 vai adicionar o controle e a conexão com ferramentas reais.'
+},
+audio:'Você concluiu o Módulo 2. Neste módulo você entendeu a diferença entre Skill, Agente e Subagente, criou um fluxo com duas etapas encadeadas na sua ferramenta e testou com dados reais. Antes de avançar, marque os dois checklists: Subagente funcionando e Agente coordenando. O próximo módulo vai adicionar o componente que transforma o assistente em um sistema profissional: o Harness.'
+},
+
+/* ─── MÓDULO 3 ─── */
+{id:'m3-1',modulo:'MÓDULO 3 — Harness',trilha:'',
+titulo:'Harness: a estrutura que garante controle',
+html:`
+<h1>Módulo 3<br><em>Harness</em></h1>
+<div class="block learn">
+  <div class="block-label">Você vai aprender</div>
+  <ul><li>O que é o Harness e por que ele é indispensável</li><li>Como conectar o assistente a ferramentas reais</li><li>Como definir pontos de aprovação humana obrigatória</li></ul>
+</div>
+<div class="block why" style="margin-top:8px">
+  <div class="block-label">Por que isso importa</div>
+  <p>Sem Harness, você tem um assistente capaz mas sem supervisão. Com Harness, o sistema conecta a IA a dados reais, valida antes de entregar e para para pedir sua aprovação quando a decisão tem impacto. Você mantém o controle — a IA ganha velocidade.</p>
+</div>
+`,
+guide:{
+  concept:'O Harness é a diferença entre um assistente de testes e um sistema profissional. Ele garante que dados sensíveis e comunicações externas passem pela sua aprovação.',
+  step:'Pense no seu fluxo atual: onde uma IA poderia causar problema se agir sem sua aprovação? Essa é onde o Harness vai atuar.',
+  result:'Você identifica os pontos de risco no seu fluxo e sabe onde o Harness precisa estar.'
+},
+audio:'Bem-vindo ao Módulo 3, o módulo do Harness. Este é o componente que transforma o seu assistente em um sistema profissional. Sem Harness, a IA pode executar qualquer coisa sem supervisão. Com Harness, você define onde o sistema para e pede sua aprovação antes de continuar. Pense no seu fluxo atual: onde uma IA poderia causar um problema se agir sem você saber? Pode ser um comunicado enviado com o tom errado, dados de colaboradores expostos, ou uma decisão tomada sem contexto suficiente. Esses são os pontos onde o Harness vai atuar.'
+},
+
+{id:'m3-2',modulo:'MÓDULO 3 — As 3 funções',trilha:'',
+titulo:'O que o Harness faz na prática',
+html:`
+<h2>As 3 funções do Harness</h2>
+<div class="g3" style="margin-top:8px">
+  <div class="card">
+    <h4>1. Conecta</h4>
+    <p style="font-size:.9rem">Liga a IA a ferramentas reais: Drive, Sheets, CRM, e-mail, sistemas internos. A IA trabalha com dados de verdade, não com exemplos genéricos.</p>
+  </div>
+  <div class="card amber">
+    <h4>2. Valida</h4>
+    <p style="font-size:.9rem">Antes de qualquer entrega, o sistema verifica se as regras foram seguidas. Controle estruturado, não confiança cega na IA.</p>
+  </div>
+  <div class="card coral">
+    <h4>3. Pede aprovação</h4>
+    <p style="font-size:.9rem">Em comunicações externas e dados sensíveis, o fluxo para e espera sua confirmação antes de continuar. Você decide — a IA executa.</p>
+  </div>
+</div>
+<div class="block key" style="margin-top:12px">Harness é a diferença entre um assistente poderoso e um sistema profissional. Você mantém o controle — a IA ganha velocidade.</div>
+`,
+guide:{
+  concept:'As três funções do Harness (conectar, validar, pedir aprovação) trabalham juntas para garantir que o assistente seja confiável em ambiente corporativo.',
+  step:'Para o seu fluxo: qual das três funções é mais urgente? Conectar a uma ferramenta real? Validar o output antes de entregar? Ou pedir aprovação em comunicações?',
+  result:'Você tem clareza sobre qual função do Harness implementar primeiro no seu fluxo.'
+},
+audio:'Esta etapa explica as três funções do Harness. Primeira função: conectar. O Harness liga a IA a ferramentas reais como Drive, Sheets, CRM e e-mail. A IA passa a trabalhar com dados de verdade. Segunda função: validar. Antes de qualquer entrega, o sistema verifica se as regras foram seguidas. Não é confiança cega, é controle estruturado. Terceira função: pedir aprovação. Em comunicações externas e dados sensíveis, o fluxo para e espera sua confirmação. Antes de avançar, identifique qual das três funções é mais urgente para o seu fluxo.'
+},
+
+{id:'m3-3',modulo:'MÓDULO 3 — Lab Google',trilha:'google',
+titulo:'Lab: Harness com AppScript e aprovação',
+html:`
+<div class="tbadge g">🔵 Trilha Google</div>
+<h2>Lab: Harness com AppScript + aprovação humana</h2>
+<div class="g2">
+  <div>
+    <h3>Fluxo com aprovação:</h3>
+    <ol style="margin-top:8px;font-size:.9rem"><li>Gemini gera o rascunho com o Gem da área</li><li>AppScript registra na planilha de controle</li><li>Notificação enviada para você revisar</li><li>Você aprova ou solicita ajuste</li><li>Só após aprovação o resultado é enviado</li></ol>
+  </div>
+  <div>
+    <h3>Checklist de validação automática:</h3>
+    <pre style="font-size:.8rem">[ ] Segue o tom de voz da área?
+[ ] Sem linguagem de cobrança?
+[ ] Ação final está clara?
+[ ] Dados internos sensíveis removidos?
+[ ] Aprovação humana registrada?</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste agora</div>
+  <p>Crie um script básico no AppScript que registra o output do Gemini em um Sheets e envia uma notificação por e-mail para você revisar. O envio real só acontece quando você responde "Aprovar" no e-mail.</p>
+</div>
+`,
+guide:{
+  concept:'No ecossistema Google, o Harness é implementado com AppScript que conecta o Gemini ao Sheets e ao Gmail, com uma etapa de aprovação antes de qualquer envio real.',
+  step:'Crie o script de registro e notificação. Comece simples: output → Sheets → e-mail de revisão. A aprovação pode ser manual no início.',
+  result:'Você tem um fluxo onde nada é enviado sem sua confirmação. O Harness está ativo.'
+},
+audio:'Nesta etapa você implementa o Harness no ecossistema Google. O fluxo tem cinco etapas. Primeiro o Gemini gera o rascunho usando o Gem da sua área. Segundo, o AppScript registra na planilha de controle. Terceiro, uma notificação é enviada para você revisar. Quarto, você aprova ou solicita ajuste. Quinto, só após aprovação o resultado é enviado. Para implementar, crie um script básico no AppScript que faz o registro e a notificação. Comece simples: o importante é que nenhum envio aconteça sem a sua confirmação explícita.'
+},
+
+{id:'m3-4',modulo:'MÓDULO 3 — Lab Claude',trilha:'claude',
+titulo:'Lab: Harness via System Prompt no Claude',
+html:`
+<div class="tbadge c">🟠 Trilha Claude</div>
+<h2>Lab: Harness via System Prompt + checklist</h2>
+<div class="g2">
+  <div>
+    <h3>Adicione ao Project — regras de Harness:</h3>
+    <pre style="font-size:.8rem">REGRAS DE APROVAÇÃO OBRIGATÓRIA:
+Antes de entregar qualquer comunicação
+externa, dado de colaborador ou decisão
+que impacte mais de 5 pessoas — PARE e
+pergunte:
+
+"Esta entrega está pronta. Confirme:
+[descreva o que vai ser executado].
+Posso prosseguir?"
+
+Nunca execute ações irreversíveis
+sem confirmação explícita.</pre>
+  </div>
+  <div>
+    <h3>Arquivo checklist_harness.md:</h3>
+    <pre style="font-size:.8rem"># Checklist antes de entregar
+[ ] Segue as regras da Skill da área?
+[ ] Não expõe dados confidenciais?
+[ ] Tom e linguagem adequados?
+[ ] Ação esperada está explícita?
+[ ] Aprovação solicitada se necessário?
+
+Aplique a TODA entrega sem exceção.</pre>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste agora</div>
+  <p>Adicione as regras de Harness às instruções do seu Project. Depois peça ao Claude para gerar um e-mail para um cliente externo. Ele deve parar e pedir sua confirmação antes de "enviar". Se não parar, ajuste as regras e teste novamente.</p>
+</div>
+`,
+guide:{
+  concept:'No Claude, o Harness é implementado diretamente nas instruções do Project. O assistente é configurado para parar e pedir aprovação em situações específicas.',
+  step:'Adicione as regras de aprovação às instruções do Project. Salve. Teste pedindo um e-mail externo e verifique se o Claude para para pedir confirmação.',
+  result:'O assistente para e pede sua aprovação antes de comunicações externas. O Harness está ativo no Claude.'
+},
+audio:'Nesta etapa você implementa o Harness no Claude adicionando regras de aprovação obrigatória às instruções do Project. Cole o bloco de regras que aparece na tela. Ele instrui o Claude a parar e pedir sua confirmação antes de qualquer comunicação externa, dado de colaborador ou decisão de impacto. Também adicione o arquivo de checklist ao Project. Depois, teste: peça ao Claude para gerar um e-mail para um cliente externo. Ele deve parar e perguntar se pode prosseguir. Se não parar, ajuste as regras e teste novamente até o comportamento estar correto.'
+},
+
+{id:'m3-5',modulo:'MÓDULO 3 — Lab n8n',trilha:'n8n',
+titulo:'Lab: Harness com validação e aprovação no n8n',
+html:`
+<div class="tbadge n">🟢 Trilha n8n</div>
+<h2>Lab: Harness com nós de validação + aprovação</h2>
+<div class="g2">
+  <div class="card">
+    <h4>Nó de validação</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>Adicione nó <strong>IF</strong> após o LLM Node</li><li>Condição: output contém termos proibidos?</li><li>Branch "Sim" → notifica para revisão manual</li><li>Branch "Não" → avança para aprovação</li></ol>
+  </div>
+  <div class="card green">
+    <h4>Nó de aprovação humana</h4>
+    <ol style="font-size:.88rem;margin-top:6px"><li>Adicione nó <strong>Wait</strong> + notificação Slack ou e-mail</li><li>Envie o rascunho para você revisar</li><li>Workflow pausa até sua resposta</li><li>Aprovação → envio real. Rejeição → loop de ajuste.</li></ol>
+  </div>
+</div>
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Teste agora</div>
+  <p>Execute o workflow com um output que contenha um termo proibido (para testar o branch de rejeição) e depois com um output limpo. Verifique se o nó Wait de fato pausa o workflow até sua resposta manual.</p>
+</div>
+`,
+guide:{
+  concept:'No n8n, o Harness são dois nós em sequência: o nó IF que valida as regras e o nó Wait que pausa o fluxo para aprovação humana.',
+  step:'Adicione os dois nós ao workflow. Teste com um output que falha na validação e com um que passa. Confirme que o Wait de fato pausa o workflow.',
+  result:'O workflow não executa envios sem passar pela validação e pela sua aprovação. O Harness está ativo.'
+},
+audio:'Nesta etapa você implementa o Harness no n8n com dois nós: validação e aprovação. Para o nó de validação, adicione um nó IF após o LLM Node. Configure a condição para verificar termos proibidos no output. Se detectar termos proibidos, o fluxo vai para revisão manual. Se o output estiver limpo, avança para aprovação. Para o nó de aprovação, adicione um nó Wait mais uma notificação por Slack ou e-mail. O workflow pausa até você responder. Se você aprovar, executa o envio real. Se rejeitar, o fluxo vai para um loop de ajuste. Teste com os dois cenários: output com problema e output limpo.'
+},
+
+{id:'m3-6',modulo:'MÓDULO 3 — Fechamento',trilha:'',
+titulo:'Módulo 3 concluído',
+html:`
+<h2>O que você construiu no Módulo 3</h2>
+<ul><li>Entendeu as três funções do Harness: conectar, validar, aprovar</li><li>Implementou aprovação humana obrigatória no seu fluxo</li><li>Testou o Harness com casos reais de aprovação e rejeição</li></ul>
+<div class="checklist" style="margin-top:12px">
+  <div class="ci" onclick="toggleCi(this,'m3-harness')"><div class="ci-box" id="cb-m3-harness"></div><div class="ci-text"><strong>Harness ativo</strong> — o sistema pede aprovação antes de comunicações externas ou dados sensíveis</div></div>
+  <div class="ci" onclick="toggleCi(this,'m3-validacao')"><div class="ci-box" id="cb-m3-validacao"></div><div class="ci-text"><strong>Validação funcionando</strong> — testei com output que passa e com output que falha na validação</div></div>
+</div>
+<div class="block hook" style="margin-top:12px">Último módulo: Montagem Final — integre tudo em um Assistente de Área completo e funcionando.</div>
+`,
+guide:{
+  concept:'Com Skill + Agente + Subagente + Harness, você tem todos os componentes do Assistente de Área. O Módulo 4 é a integração final.',
+  step:'Marque os checklists. Se o Harness não está funcionando corretamente, volte ao lab e ajuste antes de avançar.',
+  result:'Você tem os quatro componentes funcionando separadamente. O Módulo 4 vai integrá-los em um sistema completo.'
+},
+audio:'Você concluiu o Módulo 3. Neste módulo você entendeu as três funções do Harness, implementou aprovação humana obrigatória e testou com casos reais. Antes de avançar, marque os dois checklists: Harness ativo e Validação funcionando. Com esses três módulos concluídos, você tem todos os componentes do Assistente de Área funcionando separadamente. O Módulo 4 é o momento de integrar tudo em um sistema completo.'
+},
+
+/* ─── MÓDULO 4 ─── */
+{id:'m4-1',modulo:'MÓDULO 4 — Montagem Final',trilha:'',
+titulo:'Integrando tudo no Assistente de Área',
+html:`
+<h1>Módulo 4<br><em>Montagem Final</em></h1>
+<div class="block learn">
+  <div class="block-label">Nesta etapa você vai</div>
+  <ul><li>Conectar Skill, Agente, Subagente e Harness em um fluxo único</li><li>Executar o ciclo completo com uma tarefa real da sua rotina</li><li>Confirmar que o Assistente de Área está funcionando de ponta a ponta</li></ul>
+</div>
+<div class="block key" style="margin-top:8px">Esta é a etapa de integração. Você já construiu cada componente. Agora é hora de fazer tudo funcionar junto.</div>
+`,
+guide:{
+  concept:'A montagem final é o momento em que os componentes param de existir isolados e começam a trabalhar como um sistema.',
+  step:'Releia o que você construiu nos Módulos 1, 2 e 3. Mentalize o fluxo completo: Prompt → Skill → Subagente → Agente → Harness → Entrega.',
+  result:'Você está pronto para executar o ciclo completo com uma tarefa real.'
+},
+audio:'Bem-vindo ao Módulo 4, o módulo final. Aqui você vai integrar todos os componentes que construiu nos módulos anteriores em um único sistema funcionando. Nos Módulos 1, 2 e 3 você criou a Skill, o fluxo de Agente e Subagente, e o Harness com aprovação humana. Agora esses componentes vão trabalhar juntos como um Assistente de Área completo. O objetivo é executar o ciclo completo com uma tarefa real da sua rotina.'
+},
+
+{id:'m4-2',modulo:'MÓDULO 4 — Fluxo completo',trilha:'',
+titulo:'O fluxo completo do Assistente de Área',
+html:`
+<h2>O ciclo completo</h2>
+<table>
+  <thead><tr><th>Etapa</th><th>Componente</th><th>O que acontece</th></tr></thead>
+  <tbody>
+    <tr><td>1. Disparo</td><td><strong>Prompt</strong></td><td>Você descreve a tarefa — sem repetir regras</td></tr>
+    <tr><td>2. Padrão</td><td><strong>Skill</strong></td><td>O assistente aplica tom, formato e regras da área</td></tr>
+    <tr><td>3. Processamento</td><td><strong>Subagente</strong></td><td>Volume pesado processado em isolamento</td></tr>
+    <tr><td>4. Coordenação</td><td><strong>Agente</strong></td><td>Etapas encadeadas, entrega montada</td></tr>
+    <tr><td>5. Validação</td><td><strong>Harness</strong></td><td>Checklist automático + pausa para aprovação</td></tr>
+    <tr><td>6. Entrega</td><td><strong>Você</strong></td><td>Aprova e o sistema executa a entrega final</td></tr>
+  </tbody>
+</table>
+<div class="block do" style="margin-top:12px">
+  <div class="block-label">Faça agora</div>
+  <p>Escolha a tarefa principal que você definiu no Módulo 0. Execute o ciclo completo — do disparo inicial até a entrega final com aprovação. Tome nota do tempo total e compare com o processo manual.</p>
+</div>
+`,
+guide:{
+  concept:'O ciclo completo de 6 etapas é o Assistente de Área funcionando. Cada etapa usa um componente diferente que você construiu ao longo da trilha.',
+  step:'Execute o ciclo completo com a tarefa principal que você definiu no Módulo 0. Siga as 6 etapas em sequência.',
+  result:'Você executa a tarefa do início ao fim usando o Assistente de Área. Anote o tempo total.'
+},
+audio:'Esta etapa apresenta o ciclo completo do Assistente de Área em seis etapas. Primeiro, o Prompt: você descreve a tarefa sem precisar repetir regras. Segundo, a Skill aplica o tom, o formato e as regras da área automaticamente. Terceiro, o Subagente processa o volume pesado em isolamento. Quarto, o Agente encadeia as etapas e monta a entrega. Quinto, o Harness aplica o checklist de validação e pausa para sua aprovação. Sexto, você aprova e a entrega é executada. Agora faça: execute esse ciclo completo com a tarefa principal que você definiu no Módulo 0 e anote o tempo total.'
+},
+
+{id:'m4-3',modulo:'MÓDULO 4 — Checklist final',trilha:'',
+titulo:'Checklist: seu Assistente de Área está completo?',
+html:`
+<h2>Validação final do Assistente de Área</h2>
+<p>Marque cada item quando tiver confirmado que está funcionando:</p>
+<div class="checklist" style="margin-top:12px">
+  <div class="ci" onclick="toggleCi(this,'final-skill')"><div class="ci-box" id="cb-final-skill"></div><div class="ci-text"><strong>Skill configurada e testada</strong> — as regras da área estão salvas e a IA aplica sem precisar ser lembrada</div></div>
+  <div class="ci" onclick="toggleCi(this,'final-subagente')"><div class="ci-box" id="cb-final-subagente"></div><div class="ci-text"><strong>Subagente funcionando</strong> — processamento de volume pesado em isolamento testado com dados reais</div></div>
+  <div class="ci" onclick="toggleCi(this,'final-agente')"><div class="ci-box" id="cb-final-agente"></div><div class="ci-text"><strong>Agente coordenando</strong> — fluxo principal encadeia etapas e usa a Skill automaticamente</div></div>
+  <div class="ci" onclick="toggleCi(this,'final-harness')"><div class="ci-box" id="cb-final-harness"></div><div class="ci-text"><strong>Harness ativo</strong> — aprovação humana obrigatória antes de comunicações externas ou dados sensíveis</div></div>
+  <div class="ci" onclick="toggleCi(this,'final-ciclo')"><div class="ci-box" id="cb-final-ciclo"></div><div class="ci-text"><strong>Ciclo completo executado</strong> — rodei o fluxo inteiro com uma tarefa real da minha rotina do início ao fim</div></div>
+</div>
+`,
+guide:{
+  concept:'O checklist final é a validação de que cada componente foi construído, testado e está funcionando de forma integrada.',
+  step:'Marque cada item do checklist. Se algum ainda não está pronto, volte ao módulo correspondente antes de concluir.',
+  result:'Quando todos os 5 itens estiverem marcados, seu Assistente de Área está completo e pronto para uso no trabalho real.'
+},
+audio:'Esta é a etapa final de validação. O checklist tem cinco itens: Skill configurada e testada, Subagente funcionando, Agente coordenando, Harness ativo, e Ciclo completo executado. Marque cada item conforme você confirmar que está funcionando. Se algum ainda não está pronto, volte ao módulo correspondente e complete antes de marcar. Quando todos os cinco estiverem marcados, você concluiu a trilha e tem um Assistente de Área completo e pronto para uso no trabalho real.'
+},
+
+{id:'m4-4',modulo:'TRILHA CONCLUÍDA',trilha:'',
+titulo:'Trilha concluída',
+html:`
+<h1>Do prompt ao<br><em>Assistente de Área</em></h1>
+<div class="g4" style="margin-top:16px">
+  <div class="card"><h4 style="color:var(--purple)">Módulo 0</h4><p style="font-size:.85rem">Por que estrutura supera prompt</p></div>
+  <div class="card"><h4>Módulo 1</h4><p style="font-size:.85rem">Skill: o padrão reutilizável</p></div>
+  <div class="card amber"><h4>Módulo 2</h4><p style="font-size:.85rem">Agente + Subagente: coordenar e escalar</p></div>
+  <div class="card coral"><h4>Módulo 3</h4><p style="font-size:.85rem">Harness: conectar e controlar</p></div>
+</div>
+<div class="block key" style="margin-top:16px;text-align:center;border-left:none;border-top:3px solid var(--green);border-radius:0 0 10px 10px;background:rgba(0,204,106,.05)">"Usar IA bem não é escrever prompts maiores. É transformar conhecimento em sistema."</div>
+`,
+guide:{
+  concept:'Você completou a trilha. Os quatro componentes do Assistente de Área estão configurados e funcionando.',
+  step:'Clique em "Próxima etapa" para ver a tela de conclusão com o resumo completo do que você construiu.',
+  result:'Seu Assistente de Área está pronto para uso no trabalho real.'
+},
+audio:'Você concluiu a trilha. No Módulo 0 você entendeu por que prompts sozinhos não escalam. No Módulo 1 você criou a Skill, o padrão reutilizável da sua área. No Módulo 2 você montou o fluxo de Agente e Subagente para coordenar e escalar. No Módulo 3 você ativou o Harness para conectar, validar e manter controle. No Módulo 4 você integrou tudo em um ciclo completo. A mensagem final desta trilha: usar IA bem não é escrever prompts maiores. É transformar conhecimento em sistema. Clique em Próxima etapa para ver o resumo do que você construiu.'
+}
+
+]; // end ETAPAS
+
+/* ═══ ESTADO ═══ */
+let trilha = '', currentIdx = 0, visibleEtapas = [], done = {};
+
+/* ═══ STORAGE ═══ */
+const SK = 'ca-trilha-v2';
+function salvar() {
+  localStorage.setItem(SK, JSON.stringify({trilha, currentIdx, done}));
+}
+function carregar() {
+  try { return JSON.parse(localStorage.getItem(SK)); } catch(e) { return null; }
+}
+
+/* ═══ PORTAL ═══ */
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = carregar();
+  if (saved && saved.trilha) {
+    const names = {google:'Trilha Google', claude:'Trilha Claude', n8n:'Trilha n8n'};
+    const b = document.getElementById('resume-banner');
+    document.getElementById('resume-trilha-name').textContent = names[saved.trilha] || saved.trilha;
+    b.style.display = 'block';
+  }
+});
+
+function continuarSalvo() {
+  const saved = carregar();
+  if (!saved) return;
+  trilha = saved.trilha;
+  done = saved.done || {};
+  iniciarApp(saved.currentIdx || 0);
+}
+
+function iniciarTrilha(t) {
+  trilha = t;
+  done = {};
+  iniciarApp(0);
+}
+
+function iniciarApp(startIdx) {
+  // filter etapas
+  visibleEtapas = ETAPAS.filter(e => !e.trilha || e.trilha === trilha);
+
+  // set accent
+  const accents = {google:'var(--cyan)', claude:'var(--coral)', n8n:'var(--green)'};
+  document.documentElement.style.setProperty('--accent', accents[trilha] || 'var(--cyan)');
+
+  // build DOM
+  const col = document.getElementById('mainCol');
+  col.innerHTML = '';
+  visibleEtapas.forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'etapa';
+    div.id = 'etapa-' + e.id;
+    div.innerHTML = e.html;
+    // restore checklist states
+    col.appendChild(div);
+  });
+
+  // restore checklist done states
+  Object.keys(done).forEach(key => {
+    const box = document.getElementById('cb-' + key);
+    if (box) {
+      const ci = box.closest('.ci');
+      if (ci) { ci.classList.add('done'); box.textContent = '✓'; }
+    }
+  });
+
+  currentIdx = Math.min(startIdx, visibleEtapas.length - 1);
+
+  // hide portal, show app
+  const portal = document.getElementById('portal');
+  portal.classList.add('out');
+  setTimeout(() => {
+    portal.style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    renderTools();
+    updateEtapa();
+  }, 400);
+}
+
+/* ═══ NAVEGAÇÃO ═══ */
+function navigate(dir) {
+  stopAudio();
+  if (dir === 1 && currentIdx >= visibleEtapas.length - 1) {
+    mostrarFinal();
+    return;
+  }
+  currentIdx = Math.max(0, Math.min(visibleEtapas.length - 1, currentIdx + dir));
+  salvar();
+  updateEtapa();
+  document.getElementById('mainCol').scrollTop = 0;
+}
+
+function updateEtapa() {
+  visibleEtapas.forEach((e, i) => {
+    document.getElementById('etapa-' + e.id).classList.toggle('active', i === currentIdx);
+  });
+  const e = visibleEtapas[currentIdx];
+
+  // top bar
+  document.getElementById('modBadge').textContent = e.modulo;
+  const pct = Math.round((currentIdx / (visibleEtapas.length - 1)) * 100);
+  document.getElementById('progLabel').textContent = `Etapa ${currentIdx + 1} de ${visibleEtapas.length}`;
+  document.getElementById('progPct').textContent = pct + '% concluído';
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('stepCounter').textContent = `${currentIdx + 1} / ${visibleEtapas.length}`;
+
+  // guide
+  const g = e.guide || {};
+  document.getElementById('gConcept').textContent = g.concept || '—';
+  document.getElementById('gStep').textContent = g.step || '—';
+  document.getElementById('gResult').textContent = g.result || '—';
+
+  // done btn
+  const doneBtn = document.getElementById('doneBtn');
+  const isDone = done[e.id];
+  doneBtn.textContent = isDone ? '✓ Concluído' : '☐ Marcar concluído';
+  doneBtn.classList.toggle('marked', !!isDone);
+
+  // nav btns
+  document.getElementById('prevBtn').disabled = currentIdx === 0;
+  document.getElementById('nextBtn').textContent = currentIdx >= visibleEtapas.length - 1 ? 'Ver conclusão ▶' : 'Próxima etapa ▶';
+}
+
+function toggleDone() {
+  const e = visibleEtapas[currentIdx];
+  if (done[e.id]) { delete done[e.id]; }
+  else { done[e.id] = true; }
+  salvar();
+  updateEtapa();
+}
+
+/* ═══ CHECKLIST INLINE ═══ */
+function toggleCi(el, key) {
+  el.classList.toggle('done');
+  const box = document.getElementById('cb-' + key);
+  if (box) box.textContent = el.classList.contains('done') ? '✓' : '';
+  if (el.classList.contains('done')) done['ci-' + key] = true;
+  else delete done['ci-' + key];
+  salvar();
+}
+
+/* ═══ ÁUDIO (Web Speech API) ═══ */
+let utter = null;
+function getAudioText() {
+  return visibleEtapas[currentIdx]?.audio || visibleEtapas[currentIdx]?.guide?.concept || '';
+}
+function setAudioStatus(msg) { document.getElementById('audioStatus').textContent = msg; }
+function audioPlay() {
+  if (!window.speechSynthesis) { setAudioStatus('Áudio não suportado neste navegador.'); return; }
+  stopAudio();
+  const text = getAudioText();
+  if (!text) { setAudioStatus('Sem conteúdo de áudio para esta etapa.'); return; }
+  utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'pt-BR';
+  utter.rate = parseFloat(document.getElementById('audioSpeed')?.value || 1);
+  utter.pitch = 1;
+  // prefer pt-BR voice
+  const voices = speechSynthesis.getVoices();
+  const ptVoice = voices.find(v => v.lang === 'pt-BR') || voices.find(v => v.lang.startsWith('pt'));
+  if (ptVoice) utter.voice = ptVoice;
+  utter.onstart = () => {
+    setAudioStatus('▶ Reproduzindo...');
+    document.getElementById('audioPlayBtn').style.display = 'none';
+    document.getElementById('audioPauseBtn').style.display = '';
+    document.getElementById('audioRestartBtn').style.display = '';
+  };
+  utter.onend = utter.onerror = () => {
+    setAudioStatus('');
+    document.getElementById('audioPlayBtn').style.display = '';
+    document.getElementById('audioPauseBtn').style.display = 'none';
+    document.getElementById('audioRestartBtn').style.display = 'none';
+  };
+  speechSynthesis.speak(utter);
+}
+function audioPause() {
+  if (speechSynthesis.speaking && !speechSynthesis.paused) {
+    speechSynthesis.pause();
+    setAudioStatus('⏸ Pausado');
+    document.getElementById('audioPauseBtn').textContent = '▶ Retomar';
+    document.getElementById('audioPauseBtn').onclick = audioResume;
+  }
+}
+function audioResume() {
+  speechSynthesis.resume();
+  setAudioStatus('▶ Reproduzindo...');
+  document.getElementById('audioPauseBtn').textContent = '⏸ Pausar';
+  document.getElementById('audioPauseBtn').onclick = audioPause;
+}
+function audioRestart() { audioPlay(); }
+function stopAudio() {
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  utter = null;
+  setAudioStatus('');
+  document.getElementById('audioPlayBtn').style.display = '';
+  document.getElementById('audioPauseBtn').style.display = 'none';
+  document.getElementById('audioRestartBtn').style.display = 'none';
+  document.getElementById('audioPauseBtn').textContent = '⏸ Pausar';
+  document.getElementById('audioPauseBtn').onclick = audioPause;
+}
+// ensure voices loaded
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {};
+
+/* ═══ FERRAMENTAS POR TRILHA ═══ */
+const TOOLS = {
+  google: [
+    {icon:'🔵', label:'Gemini', url:'https://gemini.google.com'},
+    {icon:'📊', label:'Sheets', url:'https://sheets.google.com'},
+    {icon:'📄', label:'Docs', url:'https://docs.google.com'},
+    {icon:'📧', label:'Gmail', url:'https://mail.google.com'},
+    {icon:'📁', label:'Drive', url:'https://drive.google.com'},
+    {icon:'📓', label:'NotebookLM', url:'https://notebooklm.google.com'},
+    {icon:'📅', label:'Calendar', url:'https://calendar.google.com'},
+    {icon:'⚙️', label:'AppScript', url:'https://script.google.com'},
+  ],
+  claude: [
+    {icon:'🟠', label:'Claude.ai', url:'https://claude.ai'},
+    {icon:'📂', label:'Projects', url:'https://claude.ai'},
+    {icon:'💻', label:'Claude Code', url:'https://claude.ai/code'},
+    {icon:'🔍', label:'Research', url:'https://claude.ai'},
+    {icon:'📄', label:'Google Docs', url:'https://docs.google.com'},
+    {icon:'📊', label:'Sheets', url:'https://sheets.google.com'},
+    {icon:'📧', label:'Gmail', url:'https://mail.google.com'},
+    {icon:'📁', label:'Drive', url:'https://drive.google.com'},
+  ],
+  n8n: [
+    {icon:'🟢', label:'n8n', url:'https://app.n8n.io'},
+    {icon:'📊', label:'Sheets', url:'https://sheets.google.com'},
+    {icon:'📧', label:'Gmail', url:'https://mail.google.com'},
+    {icon:'🔗', label:'Zapier', url:'https://zapier.com'},
+    {icon:'🗄️', label:'Airtable', url:'https://airtable.com'},
+    {icon:'💬', label:'Slack', url:'https://slack.com'},
+    {icon:'📁', label:'Drive', url:'https://drive.google.com'},
+    {icon:'📄', label:'Notion', url:'https://notion.so'},
+  ]
+};
+
+function renderTools() {
+  const grid = document.getElementById('toolsGrid');
+  if (!grid) return;
+  const list = TOOLS[trilha] || [];
+  grid.innerHTML = list.map(t =>
+    `<a class="tool-btn" href="${t.url}" target="_blank" rel="noopener">
+      <span class="tool-icon">${t.icon}</span>${t.label}
+    </a>`
+  ).join('');
+}
+
+/* ═══ JUMP MENU ═══ */
+function openJump() {
+  const body = document.getElementById('jumpBody');
+  body.innerHTML = visibleEtapas.map((e, i) => `
+    <div class="jump-item ${i===currentIdx?'current':''}" onclick="jumpTo(${i})">
+      <span class="jump-num">${String(i+1).padStart(2,'0')}</span>
+      <div>
+        <div class="jump-mod">${e.modulo}</div>
+        <div class="jump-label">${e.titulo}</div>
+      </div>
+      ${done[e.id] ? '<span class="jump-check">✓</span>' : ''}
+    </div>
+  `).join('');
+  document.getElementById('jumpOverlay').classList.add('open');
+}
+function closeJump() {
+  document.getElementById('jumpOverlay').classList.remove('open');
+}
+function jumpTo(idx) {
+  stopAudio();
+  currentIdx = idx;
+  salvar();
+  updateEtapa();
+  document.getElementById('mainCol').scrollTop = 0;
+  closeJump();
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeJump(); });
+
+/* ═══ TELA FINAL ═══ */
+function mostrarFinal() {
+  stopAudio();
+  document.getElementById('app').style.display = 'none';
+  const fs = document.getElementById('final-screen');
+  fs.style.display = 'flex';
+
+  const names = {google:'Trilha Google · Workspace + Gemini', claude:'Trilha Claude · Anthropic', n8n:'Trilha n8n · Automação'};
+  document.getElementById('finalSub').textContent = `Você concluiu a ${names[trilha] || 'trilha'} e construiu seu Assistente de Área do zero.`;
+
+  const completedCount = Object.keys(done).filter(k => !k.startsWith('ci-')).length;
+  const totalCount = visibleEtapas.length;
+
+  document.getElementById('finalGrid').innerHTML = `
+    <div class="final-card"><h4 style="color:var(--green)">Skill</h4><p style="font-size:.88rem">Padrões da sua área configurados na ferramenta escolhida. A IA aplica automaticamente sem precisar ser relembrada.</p></div>
+    <div class="final-card"><h4 style="color:var(--amber)">Agente + Subagente</h4><p style="font-size:.88rem">Fluxo com processamento de volume pesado em isolamento e coordenação de etapas encadeadas.</p></div>
+    <div class="final-card"><h4 style="color:var(--coral)">Harness</h4><p style="font-size:.88rem">Validação automática e aprovação humana obrigatória antes de comunicações externas ou dados sensíveis.</p></div>
+    <div class="final-card"><h4 style="color:var(--cyan)">Progresso</h4><p style="font-size:.88rem">${completedCount} de ${totalCount} etapas marcadas como concluídas. Trilha: <strong>${names[trilha]||''}</strong>.</p></div>
+  `;
+
+  document.getElementById('finalChecklist').innerHTML = `
+    <div style="font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;font-weight:700">Validação final</div>
+    <div class="ci" onclick="this.classList.toggle('done');this.querySelector('.ci-box').textContent=this.classList.contains('done')?'✓':''"><div class="ci-box"></div><div class="ci-text">Meu Assistente de Área executa ao menos uma tarefa recorrente real sem eu precisar reexplicar as regras</div></div>
+    <div class="ci" onclick="this.classList.toggle('done');this.querySelector('.ci-box').textContent=this.classList.contains('done')?'✓':''"><div class="ci-box"></div><div class="ci-text">O fluxo tem pelo menos um ponto de aprovação humana antes de comunicações externas</div></div>
+    <div class="ci" onclick="this.classList.toggle('done');this.querySelector('.ci-box').textContent=this.classList.contains('done')?'✓':''"><div class="ci-box"></div><div class="ci-text">Comparei o tempo do processo manual com o tempo usando o Assistente de Área</div></div>
+    <div class="ci" onclick="this.classList.toggle('done');this.querySelector('.ci-box').textContent=this.classList.contains('done')?'✓':''"><div class="ci-box"></div><div class="ci-text">Compartilhei o que aprendi com alguém da minha área</div></div>
+  `;
+}
+
+function reiniciarTrilha() {
+  stopAudio();
+  localStorage.removeItem(SK);
+  done = {};
+  if (document.getElementById('final-screen').style.display !== 'none') {
+    document.getElementById('final-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+  }
+  currentIdx = 0;
+  updateEtapa();
+  document.getElementById('mainCol').scrollTop = 0;
+  salvar();
+}
+
+function trocarTrilha() {
+  stopAudio();
+  localStorage.removeItem(SK);
+  document.getElementById('final-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  const portal = document.getElementById('portal');
+  portal.style.display = 'flex';
+  portal.classList.remove('out');
+  document.getElementById('resume-banner').style.display = 'none';
+}
+
+/* ═══ KEYBOARD ═══ */
+document.addEventListener('keydown', e => {
+  if (document.getElementById('app').style.display === 'none') return;
+  if (e.key === 'ArrowRight') navigate(1);
+  else if (e.key === 'ArrowLeft') navigate(-1);
+});
+</script>
+<!-- ═══ JUMP MENU MODAL ═══ -->
+<div class="jump-overlay" id="jumpOverlay" onclick="if(event.target===this)closeJump()">
+  <div class="jump-modal">
+    <div class="jump-header">
+      <span class="jump-title">📍 Ir para uma etapa</span>
+      <button class="jump-close" onclick="closeJump()">✕</button>
+    </div>
+    <div class="jump-body" id="jumpBody"></div>
+  </div>
+</div>
+</body>
+</html>
