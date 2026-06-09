@@ -581,14 +581,22 @@ html:`
   <div class="block-label">Nesta etapa você vai</div>
   <p>Criar um Gem personalizado no Gemini com as regras da sua área — sua primeira Skill funcionando.</p>
 </div>
-<div class="g2">
-  <div>
-    <h3>Passo a passo:</h3>
-    <ol style="margin-top:8px"><li>Abra o <strong>Gemini Advanced</strong> → clique em <strong>Gems</strong> no menu lateral</li><li>Clique em <strong>Criar novo Gem</strong></li><li>Nome: <em>"Assistente [Sua Área] — CA"</em></li><li>No campo de instruções, cole o template ao lado adaptado para sua área</li><li>Salve e teste com uma tarefa real</li></ol>
-  </div>
-  <div>
-    <h3>Template de instruções:</h3>
-    <pre>Você é o assistente da área [ÁREA]
+<h3>Passo 1 — Abra a área de Gems</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Acesse <a href="https://gemini.google.com" target="_blank">gemini.google.com</a> com sua conta Conta Azul.</li>
+  <li>No <strong>menu lateral esquerdo</strong>, procure o item <strong>Gems</strong> (ícone de losango). Clique nele.</li>
+  <li>Clique no botão <strong>+ Novo Gem</strong> (canto superior).</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Uma tela dividida: à <strong>esquerda</strong> um campo grande de instruções; à <strong>direita</strong> uma prévia onde você testa o Gem. Se não achar "Gems", você precisa estar no Gemini com conta corporativa — fale com o seu gestor.</p></div>
+
+<h3>Passo 2 — Nomeie e cole as instruções</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>No campo <strong>Nome</strong>, escreva: <em>"Assistente [Sua Área] — CA"</em> (ex.: "Assistente People — CA").</li>
+  <li>No campo grande de <strong>Instruções</strong>, cole o template abaixo.</li>
+  <li>Troque <code>[ÁREA]</code> pelo nome real do seu time e ajuste as regras fixas para a realidade da sua área.</li>
+</ol>
+<h3 style="margin-top:10px">Template de instruções (copie):</h3>
+<pre>Você é o assistente da área [ÁREA]
 da Conta Azul.
 
 Tom de voz: direto, humano, sem
@@ -603,12 +611,18 @@ Regras fixas:
 
 Antes de entregar, verifique se o
 texto cumpre todas essas regras.</pre>
-  </div>
+
+<h3 style="margin-top:12px">Passo 3 — Salve e teste</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Clique em <strong>Salvar</strong> (canto superior direito). O Gem agora aparece na sua lista.</li>
+  <li>Na prévia à direita (ou abrindo o Gem), envie o prompt de teste abaixo.</li>
+</ol>
+<div class="block test" style="margin-top:8px">
+  <div class="block-label">Prompt de teste</div>
+  <p style="margin-bottom:6px"><em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em></p>
+  <p style="font-size:.88rem"><strong>O que esperar:</strong> uma resposta curta, em tom humano, sem cobrança e terminando com uma ação clara — <em>sem você ter explicado nenhuma dessas regras na hora</em>. É isso que prova que a Skill está ativa.</p>
 </div>
-<div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste na sua ferramenta</div>
-  <p>Após criar o Gem, envie este prompt de teste: <em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em> A resposta deve vir no tom e formato corretos da sua área.</p>
-</div>
+<div class="block diag" style="margin-top:10px"><div class="block-label">⚠ Se a resposta veio genérica</div><p>Volte ao Gem, abra as instruções e deixe as regras mais específicas (ex.: dê um exemplo de tom). Salve e teste de novo. O Gem só fica bom depois de 1 ou 2 ajustes — isso é normal.</p></div>
 `,
 guide:{
   concept:'Um Gem no Gemini é uma versão configurada da IA com instruções fixas. É a sua Skill no ecossistema Google.',
@@ -627,14 +641,22 @@ html:`
   <div class="block-label">Nesta etapa você vai</div>
   <p>Criar um Project no Claude com instruções fixas da sua área — sua Skill configurada e funcionando.</p>
 </div>
-<div class="g2">
-  <div>
-    <h3>Passo a passo:</h3>
-    <ol style="margin-top:8px"><li>Acesse <strong>claude.ai</strong> → clique em <strong>Projetos</strong> no menu</li><li>Crie um novo projeto: <em>"Assistente [Sua Área] — CA"</em></li><li>Abra <strong>Instruções do projeto</strong> e cole o template ao lado</li><li>Adicione um arquivo <strong>regras_de_area.md</strong> com suas regras específicas</li><li>Teste dentro do projeto com uma tarefa real</li></ol>
-  </div>
-  <div>
-    <h3>Template de instruções:</h3>
-    <pre>Você é o assistente da área [ÁREA]
+<h3>Passo 1 — Crie o Project</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Acesse <a href="https://claude.ai" target="_blank">claude.ai</a> com sua conta Conta Azul.</li>
+  <li>No menu lateral esquerdo, clique em <strong>Projects</strong> (Projetos).</li>
+  <li>Clique em <strong>+ Create project</strong>. No nome, escreva <em>"Assistente [Sua Área] — CA"</em>. Clique em <strong>Create</strong>.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>A tela do projeto, com um botão de chat no centro e, à direita, uma caixa <strong>"Project knowledge"</strong> e um link <strong>"Set instructions"</strong> (definir instruções). Se não tiver "Projects" no menu, sua conta ainda não é Pro/Team — fale com o gestor.</p></div>
+
+<h3>Passo 2 — Cole as instruções permanentes</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Clique em <strong>Set instructions</strong> (ou no ícone de engrenagem → Instructions).</li>
+  <li>Cole o template abaixo e troque <code>[ÁREA]</code> pelo seu time.</li>
+  <li>Clique em <strong>Save instructions</strong>.</li>
+</ol>
+<h3 style="margin-top:8px">Template de instruções (copie):</h3>
+<pre>Você é o assistente da área [ÁREA]
 da Conta Azul.
 
 Sempre que escrever qualquer comunicação:
@@ -646,11 +668,15 @@ Sempre que escrever qualquer comunicação:
 
 Antes de entregar, confirme que o
 texto segue todas as regras acima.</pre>
-  </div>
-</div>
-<div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste na sua ferramenta</div>
-  <p>Dentro do Project criado, envie: <em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em> Verifique se o tom e o formato vieram corretos sem precisar explicar nada.</p>
+
+<h3 style="margin-top:12px">Passo 3 — (Opcional) Adicione um arquivo de regras</h3>
+<p style="font-size:.92rem;margin:4px 0 8px">Na caixa <strong>Project knowledge</strong>, clique em <strong>+ Add content</strong> e suba um arquivo de texto <code>regras_de_area.md</code> com detalhes específicos (glossário do time, exemplos de tom, nomes que não podem aparecer). O Claude lê isso em toda conversa do projeto.</p>
+
+<h3>Passo 4 — Teste dentro do Project</h3>
+<div class="block test" style="margin-top:8px">
+  <div class="block-label">Prompt de teste</div>
+  <p style="margin-bottom:6px">Dentro do projeto, comece uma conversa e envie: <em>"Redija um comunicado para o Slack sobre a pesquisa de clima que começa semana que vem."</em></p>
+  <p style="font-size:.88rem"><strong>O que esperar:</strong> o texto já vem no tom e formato certos sem você explicar as regras. <strong>Importante:</strong> a Skill só vale <em>dentro</em> do projeto — conversas fora dele não usam as instruções.</p>
 </div>
 `,
 guide:{
@@ -670,14 +696,25 @@ html:`
   <div class="block-label">Nesta etapa você vai</div>
   <p>Criar um workflow base no n8n com um System Prompt reutilizável — sua Skill aplicada a todos os fluxos da área.</p>
 </div>
-<div class="g2">
-  <div>
-    <h3>Passo a passo:</h3>
-    <ol style="margin-top:8px"><li>Abra o n8n → crie workflow: <em>"Assistente [Área] — CA"</em></li><li>Adicione nó <strong>Manual Trigger</strong> como entrada</li><li>Adicione nó <strong>AI Agent</strong> ou <strong>Chat Model</strong></li><li>No campo <strong>System Message</strong>, cole o template ao lado</li><li>Salve como template reutilizável para próximos fluxos</li></ol>
-  </div>
-  <div>
-    <h3>Template do System Message:</h3>
-    <pre>Você é o assistente da área [ÁREA]
+<div class="block diag" style="margin-bottom:12px"><div class="block-label">Antes de começar</div><p>Você precisa de acesso ao n8n da Conta Azul e de uma credencial de IA já configurada (OpenAI ou Claude). Se ainda não tem, peça ao time de automação — sem a credencial o nó de IA não roda.</p></div>
+
+<h3>Passo 1 — Crie o workflow e o gatilho</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>No n8n, clique em <strong>+ Add workflow</strong> e renomeie no topo para <em>"Assistente [Área] — CA"</em>.</li>
+  <li>Clique no grande <strong>+</strong> no centro do canvas para abrir a busca de nós.</li>
+  <li>Digite <strong>Manual Trigger</strong> e selecione "Trigger manually". Ele vira o ponto de partida.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Um bloco "When clicking Test workflow" no canvas. É o botão que você usa para rodar o fluxo manualmente enquanto testa.</p></div>
+
+<h3>Passo 2 — Adicione o nó de IA</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Clique no <strong>+</strong> à direita do Manual Trigger.</li>
+  <li>Busque <strong>AI Agent</strong> (ou "Basic LLM Chain") e adicione.</li>
+  <li>No nó, conecte a credencial de IA no campo <strong>Model</strong> (ex.: OpenAI Chat Model).</li>
+  <li>Localize o campo <strong>System Message</strong> e cole o template abaixo.</li>
+</ol>
+<h3 style="margin-top:8px">Template do System Message (copie):</h3>
+<pre>Você é o assistente da área [ÁREA]
 da Conta Azul.
 
 Regras para TODAS as respostas:
@@ -690,11 +727,13 @@ Regras para TODAS as respostas:
 Input do usuário: {{ $json.input }}
 Siga as regras acima para gerar
 o output.</pre>
-  </div>
-</div>
-<div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste na sua ferramenta</div>
-  <p>Execute o workflow com o input: <em>"Comunicado de pesquisa de clima — começa semana que vem"</em>. Verifique se o output vem no tom e formato corretos sem instruções extras.</p>
+<div class="block diag" style="margin:6px 0 10px"><div class="block-label">⚠ Atenção ao {{ $json.input }}</div><p>Esse trecho entre chaves duplas é o jeito do n8n puxar o texto que entra no fluxo. Não apague — é ele que faz o pedido do usuário chegar à IA.</p></div>
+
+<h3>Passo 3 — Teste e salve como base</h3>
+<div class="block test" style="margin-top:8px">
+  <div class="block-label">Como testar</div>
+  <p style="margin-bottom:6px">Clique em <strong>Test workflow</strong> (canto inferior). No input, use: <em>"Comunicado de pesquisa de clima — começa semana que vem"</em>.</p>
+  <p style="font-size:.88rem"><strong>O que esperar:</strong> o nó de IA fica verde e o output (clique nele para ver) vem no tom e formato da sua área. Depois clique nos <strong>...</strong> do workflow → <strong>Duplicate</strong> para reusar essa base em fluxos futuros sem reescrever as regras.</p>
 </div>
 `,
 guide:{
@@ -777,23 +816,38 @@ titulo:'Lab: Agente + Subagente com Gemini e NotebookLM',
 html:`
 <div class="tbadge g">🔵 Trilha Google</div>
 <h2>Lab: fluxo Agente + Subagente</h2>
-<div class="g2">
-  <div class="card">
-    <h4>Etapa 1 — Subagente: NotebookLM</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>Suba os documentos pesados no NotebookLM</li><li>Use o chat para extrair padrões e resumos</li><li>Exporte o resumo — esse é o output do Subagente</li></ol>
-  </div>
-  <div class="card cyan">
-    <h4>Etapa 2 — Agente: Gemini com Gem</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>Abra o Gem que você criou no Módulo 1</li><li>Cole o resumo do NotebookLM como contexto</li><li>Peça a entrega final: relatório, comunicado, e-mail</li></ol>
-  </div>
-</div>
-<pre style="margin-top:12px">"Com base no resumo abaixo [cole aqui], gere um relatório executivo
-seguindo as regras do nosso Gem de área.
+<div class="block learn" style="margin-bottom:12px"><div class="block-label">Nesta etapa você vai</div><p>Quebrar uma tarefa pesada em dois passos: o <strong>NotebookLM</strong> (Subagente) lê montes de documento e resume; o <strong>Gemini com seu Gem</strong> (Agente) pega esse resumo e gera a entrega no padrão da sua área. Use documentos reais do seu time.</p></div>
+
+<h3>Passo 1 — O Subagente: NotebookLM lê os documentos</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Acesse <a href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a> e clique em <strong>Criar novo</strong> (New notebook).</li>
+  <li>Clique em <strong>+ Adicionar fontes</strong> e suba os documentos pesados (PDFs, docs, planilhas exportadas). Pode subir vários de uma vez.</li>
+  <li>Espere o NotebookLM processar (ícone de "pronto" em cada fonte). No chat embaixo, peça o resumo com o prompt abaixo.</li>
+</ol>
+<pre style="font-size:.8rem">"Leia todas as fontes e me dê:
+1. Os 5 padrões mais recorrentes
+2. Os 3 pontos que exigem atenção
+3. Uma recomendação de priorização
+Seja objetivo e não invente nada
+que não esteja nas fontes."</pre>
+<ol start="4" style="font-size:.92rem;margin:6px 0 4px"><li><strong>Copie</strong> a resposta. Esse texto é o <em>output do Subagente</em>.</li></ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Respostas com citações que apontam exatamente de qual documento veio cada informação. Se algo parecer inventado, clique na citação para conferir na fonte.</p></div>
+
+<h3>Passo 2 — O Agente: seu Gem gera a entrega</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Abra o <strong>Gem</strong> que você criou no Módulo 1 (em Gemini → Gems).</li>
+  <li>Cole o prompt abaixo, substituindo <code>[cole aqui]</code> pelo resumo que você copiou do NotebookLM.</li>
+</ol>
+<pre style="margin-top:6px">"Com base no resumo abaixo [cole aqui],
+gere um relatório executivo seguindo as
+regras do nosso Gem de área.
 Formato: 3 seções, máximo 400 palavras,
 com os próximos passos ao final."</pre>
+<div class="block diag" style="margin:6px 0 12px"><div class="block-label">Por que dois passos e não um só?</div><p>Se você jogasse os documentos inteiros direto no Gem, ele se perderia no volume e misturaria as regras da sua área com a leitura crua. Separar mantém cada etapa focada — e o resultado fica bem melhor.</p></div>
+
 <div class="block test" style="margin-top:10px">
-  <div class="block-label">Teste agora</div>
-  <p>Escolha um processo real da sua semana que envolva analisar vários documentos. Execute o fluxo completo: Subagente (NotebookLM) → Agente (Gemini com Gem). Compare o tempo com o processo manual.</p>
+  <div class="block-label">Validação — você concluiu quando:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li>O NotebookLM te deu um resumo baseado nas suas fontes reais.</li><li>O Gem transformou esse resumo numa entrega no tom da sua área.</li><li>O resultado saiu mais rápido (e melhor) que fazer tudo manualmente.</li></ul>
 </div>
 `,
 guide:{
@@ -809,10 +863,14 @@ titulo:'Lab: Agente + Subagente no Claude',
 html:`
 <div class="tbadge c">🟠 Trilha Claude</div>
 <h2>Lab: fluxo Agente + Subagente</h2>
-<div class="g2">
-  <div class="card">
-    <h4>Conversa do Subagente — isolada</h4>
-    <pre style="font-size:.78rem;margin-top:8px">"Você é um especialista em análise.
+<div class="block learn" style="margin-bottom:12px"><div class="block-label">Nesta etapa você vai</div><p>Rodar <strong>duas conversas separadas</strong> no Claude. A 1ª (Subagente) faz a leitura pesada dos documentos, <em>fora</em> do seu Project. A 2ª (Agente) roda <em>dentro</em> do Project — usa a análise da 1ª e aplica as regras da sua área. Você é quem leva o resultado de uma para a outra.</p></div>
+
+<h3>Passo 1 — Conversa do Subagente (fora do Project)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Em <a href="https://claude.ai" target="_blank">claude.ai</a>, comece uma <strong>conversa nova normal</strong> (não dentro do Project — assim ela fica focada só na análise).</li>
+  <li>Cole o prompt abaixo e, onde diz <code>[Cole os documentos aqui]</code>, cole seus textos (ou anexe os arquivos pelo clipe 📎).</li>
+</ol>
+<pre style="font-size:.8rem;margin-top:6px">"Você é um especialista em análise.
 Analise os documentos abaixo e entregue:
 1. 5 padrões mais recorrentes
 2. 3 pontos críticos de atenção
@@ -820,20 +878,24 @@ Analise os documentos abaixo e entregue:
 
 [Cole os documentos aqui]
 Não escreva nada além do pedido."</pre>
-  </div>
-  <div class="card cyan">
-    <h4>Conversa do Agente — no seu Project</h4>
-    <pre style="font-size:.78rem;margin-top:8px">"Com base na análise abaixo, gere
+<ol start="3" style="font-size:.92rem;margin:6px 0 4px"><li><strong>Copie</strong> a análise que o Claude devolver.</li></ol>
+
+<h3>Passo 2 — Conversa do Agente (dentro do Project)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Abra o <strong>Project</strong> que você criou no Módulo 1 e inicie uma conversa <em>dentro</em> dele.</li>
+  <li>Cole o prompt abaixo, substituindo <code>[output da conversa do Subagente]</code> pela análise copiada.</li>
+</ol>
+<pre style="font-size:.8rem;margin-top:6px">"Com base na análise abaixo, gere
 o relatório executivo para liderança
 seguindo as regras do Project.
 
 Análise recebida:
 [output da conversa do Subagente]"</pre>
-  </div>
-</div>
+<div class="block diag" style="margin:8px 0 12px"><div class="block-label">Por que não fazer tudo de uma vez?</div><p>A conversa do Subagente fica "suja" de documentos longos. Se você pedisse a entrega final ali, o Claude misturaria a leitura crua com o resultado. Levar só a análise limpa para o Project deixa o Agente focado nas regras da sua área.</p></div>
+
 <div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste agora</div>
-  <p>Use um processo real da sua área com volume de documentos. Execute a conversa do Subagente primeiro, depois cole o output no Project e execute a conversa do Agente. Observe a qualidade do resultado final comparado a fazer tudo em um único prompt.</p>
+  <div class="block-label">Validação — você concluiu quando:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li>A 1ª conversa entregou uma análise estruturada (padrões, atenção, priorização).</li><li>A 2ª conversa, no Project, gerou a entrega final no tom da sua área.</li><li>Você percebe a entrega melhor do que se tivesse feito tudo num prompt só.</li></ul>
 </div>
 `,
 guide:{
@@ -849,19 +911,29 @@ titulo:'Lab: sub-workflows no n8n',
 html:`
 <div class="tbadge n">🟢 Trilha n8n</div>
 <h2>Lab: Agente + Subagente com sub-workflows</h2>
-<div class="g2">
-  <div class="card">
-    <h4>Sub-workflow (Subagente)</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>Crie um workflow separado: <em>"Subagente — Análise de Dados"</em></li><li>Adicione nó <strong>Execute Workflow Trigger</strong> como entrada</li><li>Adicione LLM Node com prompt de análise focada</li><li>Retorne apenas o resumo estruturado em JSON</li></ol>
-  </div>
-  <div class="card green">
-    <h4>Workflow principal (Agente)</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>No workflow principal, adicione <strong>Execute Workflow</strong> apontando para o Subagente</li><li>Receba o resumo JSON do Subagente</li><li>Passe para o LLM Node com o System Message da Skill</li><li>Entregue via Slack ou e-mail</li></ol>
-  </div>
-</div>
+<div class="block learn" style="margin-bottom:12px"><div class="block-label">Nesta etapa você vai</div><p>Montar <strong>dois workflows</strong>: um sub-workflow que faz a análise pesada e devolve um JSON, e o workflow principal que chama o sub e usa o resultado para gerar a entrega com a Skill da sua área. Faça e teste o sub-workflow primeiro, sozinho — só depois conecte.</p></div>
+
+<h3>Passo 1 — Crie o sub-workflow (o Subagente)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li><strong>+ Add workflow</strong> → renomeie para <em>"Subagente — Análise de Dados"</em>.</li>
+  <li>Adicione o nó de entrada <strong>Execute Workflow Trigger</strong> (busque por "Execute Workflow Trigger"). É ele que permite ser chamado por outro fluxo — não use Manual Trigger aqui.</li>
+  <li>Adicione um <strong>LLM Node</strong> com um System Message focado só em análise: "Resuma os dados de entrada em 5 padrões, 3 pontos de atenção e 1 recomendação. Responda em JSON."</li>
+  <li>No final, garanta que a saída seja só o <strong>resumo estruturado</strong>. Salve.</li>
+</ol>
+<div class="block do" style="margin:6px 0 14px"><div class="block-label">Faça agora — teste isolado</div><p>Rode o sub-workflow sozinho com um dado de exemplo (use <strong>Test workflow</strong>). Confirme que ele devolve um JSON limpo <em>antes</em> de conectar ao principal. Depurar dois fluxos juntos é muito mais difícil.</p></div>
+
+<h3>Passo 2 — Conecte no workflow principal (o Agente)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Abra o workflow base que você criou no Módulo 1 (ou crie um novo).</li>
+  <li>Adicione o nó <strong>Execute Workflow</strong> e, no campo <strong>Workflow</strong>, selecione <em>"Subagente — Análise de Dados"</em>.</li>
+  <li>O JSON que volta do sub fica disponível para o próximo nó. Ligue-o ao <strong>LLM Node</strong> que tem o System Message da sua Skill.</li>
+  <li>Adicione um nó de entrega ao final: <strong>Slack</strong> ou <strong>Send Email</strong>.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 12px"><div class="block-label">O que você vai ver</div><p>No canvas, uma linha ligando o nó Execute Workflow ao seu LLM Node. Ao rodar, clique em cada nó para ver os dados passando: dado bruto → JSON do sub → entrega final formatada.</p></div>
+
 <div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste agora</div>
-  <p>Execute o workflow principal com dados reais. O sub-workflow deve processar e retornar o resumo. O workflow principal deve gerar a entrega final com a Skill ativa. Verifique se os dois estão se comunicando corretamente via JSON.</p>
+  <div class="block-label">Validação — você concluiu quando:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li>O sub-workflow, rodando sozinho, devolve um JSON estruturado.</li><li>O workflow principal chama o sub e recebe esse JSON sem erro.</li><li>A entrega final sai no tom da sua área e chega no Slack/e-mail de teste.</li></ul>
 </div>
 `,
 guide:{
@@ -946,31 +1018,78 @@ titulo:'Lab: Harness com AppScript e aprovação',
 html:`
 <div class="tbadge g">🔵 Trilha Google</div>
 <h2>Lab: Harness com AppScript + aprovação humana</h2>
-<div class="g2">
-  <div>
-    <h3>Fluxo com aprovação:</h3>
-    <ol style="margin-top:8px;font-size:.9rem"><li>Gemini gera o rascunho com o Gem da área</li><li>AppScript registra na planilha de controle</li><li>Notificação enviada para você revisar</li><li>Você aprova ou solicita ajuste</li><li>Só após aprovação o resultado é enviado</li></ol>
-  </div>
-  <div>
-    <h3>Checklist de validação automática:</h3>
-    <pre style="font-size:.8rem">[ ] Segue o tom de voz da área?
-[ ] Sem linguagem de cobrança?
-[ ] Ação final está clara?
-[ ] Dados internos sensíveis removidos?
-[ ] Aprovação humana registrada?</pre>
-  </div>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Nesta etapa você vai</div>
+  <p>Montar, passo a passo, um script real que registra cada rascunho numa planilha e te manda um e-mail de revisão — nada é "enviado" antes de você aprovar. Não precisa saber programar: você só vai copiar, colar e clicar.</p>
 </div>
+
+<h3>Passo 1 — Prepare a planilha de controle</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Abra uma <strong>Planilha Google</strong> nova em <a href="https://sheets.new" target="_blank">sheets.new</a>.</li>
+  <li>Dê o nome <em>"Controle Assistente — [Sua Área]"</em> (clique no título "Planilha sem título" no topo).</li>
+  <li>Na primeira linha, escreva os títulos das colunas: <strong>A1:</strong> Data · <strong>B1:</strong> Rascunho · <strong>C1:</strong> Status.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Uma planilha com três colunas nomeadas. É aqui que cada rascunho gerado vai ficar registrado — seu "histórico de tudo que a IA produziu".</p></div>
+
+<h3>Passo 2 — Abra o editor de AppScript</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>No menu da planilha, clique em <strong>Extensões</strong>.</li>
+  <li>Clique em <strong>Apps Script</strong>. Uma nova aba abre com um editor de código.</li>
+  <li>Vai aparecer um arquivo <code>Código.gs</code> com uma função vazia <code>function myFunction() {}</code>. <strong>Apague tudo</strong> que está nele.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Uma tela escura/clara com um editor de texto e um botão <strong>▷ Executar</strong> no topo. É o AppScript — o "motor" que conecta sua planilha ao Gmail.</p></div>
+
+<h3>Passo 3 — Cole o código abaixo</h3>
+<p style="font-size:.9rem;margin:4px 0 6px">Copie exatamente este código para dentro do editor. A única linha que você precisa editar é o seu e-mail, marcada com um comentário.</p>
+<pre style="font-size:.74rem;line-height:1.45">function registrarRascunho(texto) {
+  // 1. TROQUE pelo SEU e-mail da Conta Azul:
+  var meuEmail = "voce@contaazul.com";
+
+  // 2. Registra o rascunho na planilha
+  var aba = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+  aba.appendRow([new Date(), texto, "AGUARDANDO APROVACAO"]);
+
+  // 3. Te manda um e-mail para revisar
+  MailApp.sendEmail({
+    to: meuEmail,
+    subject: "Rascunho aguardando sua aprovacao",
+    body: "Um novo rascunho foi gerado:\\n\\n" + texto +
+          "\\n\\nResponda APROVAR ou AJUSTAR. " +
+          "Nada e enviado antes da sua resposta."
+  });
+}
+
+// Funcao de teste — roda com um rascunho de exemplo
+function testar() {
+  registrarRascunho("Comunicado de pesquisa de clima da proxima semana.");
+}</pre>
+<div class="block do" style="margin:6px 0 14px"><div class="block-label">Faça agora</div><p>Troque <code>voce@contaazul.com</code> pelo seu e-mail real. Depois clique no ícone de <strong>disquete (Salvar)</strong> ou pressione Ctrl+S.</p></div>
+
+<h3>Passo 4 — Execute e autorize</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>No topo, no seletor de função, escolha <strong>testar</strong>.</li>
+  <li>Clique em <strong>▷ Executar</strong>.</li>
+  <li>Na primeira vez o Google pede permissão: clique em <strong>Revisar permissões</strong> → escolha sua conta → <strong>Avançado</strong> → <strong>Acessar (nome do projeto)</strong> → <strong>Permitir</strong>.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>Na planilha aparece uma nova linha com a data, o texto e o status "AGUARDANDO APROVACAO". E na sua caixa de entrada chega o e-mail de revisão. <strong>Esse é o Harness funcionando:</strong> o rascunho existe, mas nada saiu para fora sem você ver.</p></div>
+
+<div class="block diag" style="margin-bottom:12px"><div class="block-label">⚠ Se der erro</div>
+<ul style="font-size:.88rem;margin:4px 0 0"><li><strong>"Autorização necessária"</strong> → é normal na 1ª vez. Siga o passo de autorizar acima.</li><li><strong>O e-mail não chegou</strong> → confira se você trocou o e-mail na linha marcada e olhe a pasta Spam.</li><li><strong>"appendRow is not a function"</strong> → você executou direto no editor sem salvar; salve (Ctrl+S) e rode <code>testar</code> de novo.</li></ul></div>
+
+<h3>Passo 5 — Conecte ao seu Gem</h3>
+<p style="font-size:.92rem;margin:4px 0 8px">Agora o fluxo completo: peça ao seu <strong>Gem</strong> (criado no Módulo 1) para gerar um comunicado real. Copie o texto da resposta e cole dentro da função <code>testar()</code>, no lugar do exemplo. Rode de novo — o rascunho do Gem vai para a planilha e para o seu e-mail.</p>
+
 <div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste agora</div>
-  <p>Crie um script básico no AppScript que registra o output do Gemini em um Sheets e envia uma notificação por e-mail para você revisar. O envio real só acontece quando você responde "Aprovar" no e-mail.</p>
+  <div class="block-label">Validação — você concluiu quando:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li>A planilha tem ao menos uma linha com status "AGUARDANDO APROVACAO".</li><li>Você recebeu o e-mail de revisão com o texto do rascunho.</li><li>Você consegue explicar por que nenhum envio acontece sem a sua confirmação.</li></ul>
 </div>
 `,
 guide:{
-  concept:'No ecossistema Google, o Harness é implementado com AppScript que conecta o Gemini ao Sheets e ao Gmail, com uma etapa de aprovação antes de qualquer envio real.',
-  step:'Crie o script de registro e notificação. Comece simples: output → Sheets → e-mail de revisão. A aprovação pode ser manual no início.',
-  result:'Você tem um fluxo onde nada é enviado sem sua confirmação. O Harness está ativo.'
+  concept:'No ecossistema Google, o Harness é um script de AppScript que registra cada rascunho numa planilha e te envia um e-mail de revisão. O código já está pronto na tela — você só copia, troca o seu e-mail e executa.',
+  step:'Siga os 5 passos: crie a planilha com as colunas Data/Rascunho/Status, abra Extensões → Apps Script, cole o código, troque o e-mail, salve e execute a função testar. Autorize na primeira vez.',
+  result:'Sua planilha tem uma linha registrada com status AGUARDANDO APROVACAO e você recebeu o e-mail de revisão. Nada saiu para fora sem você ver — o Harness está ativo.'
 },
-audio:'Nesta etapa você implementa o Harness no ecossistema Google. O fluxo tem cinco etapas. Primeiro o Gemini gera o rascunho usando o Gem da sua área. Segundo, o AppScript registra na planilha de controle. Terceiro, uma notificação é enviada para você revisar. Quarto, você aprova ou solicita ajuste. Quinto, só após aprovação o resultado é enviado. Para implementar, crie um script básico no AppScript que faz o registro e a notificação. Comece simples: o importante é que nenhum envio aconteça sem a sua confirmação explícita.'
+audio:'Nesta etapa você implementa o Harness no ecossistema Google com código real de AppScript — e não precisa saber programar, é só copiar e colar. Passo um: crie uma planilha Google nova e coloque três títulos de coluna na primeira linha: Data, Rascunho e Status. Passo dois: no menu, clique em Extensões e depois em Apps Script para abrir o editor de código. Apague o que estiver lá. Passo três: copie o código que aparece na tela e cole no editor. A única coisa que você edita é a linha do e-mail: troque pelo seu e-mail da Conta Azul. Salve com Control S. Passo quatro: no topo, selecione a função testar e clique em Executar. Na primeira vez o Google vai pedir permissão; clique em Revisar permissões, escolha sua conta, clique em Avançado e depois em Permitir. Você vai ver uma nova linha na planilha com status Aguardando Aprovação e vai receber um e-mail de revisão. Esse é o Harness funcionando: o rascunho existe, mas nada foi enviado sem você ver. Passo cinco: peça ao seu Gem para gerar um comunicado real, copie o texto e cole dentro da função testar no lugar do exemplo. Rode de novo e veja o rascunho do Gem chegar na planilha e no seu e-mail.'
 },
 
 {id:'m3-4',modulo:'MÓDULO 3 — Lab Claude',trilha:'claude',
@@ -978,10 +1097,16 @@ titulo:'Lab: Harness via System Prompt no Claude',
 html:`
 <div class="tbadge c">🟠 Trilha Claude</div>
 <h2>Lab: Harness via System Prompt + checklist</h2>
-<div class="g2">
-  <div>
-    <h3>Adicione ao Project — regras de Harness:</h3>
-    <pre style="font-size:.8rem">REGRAS DE APROVAÇÃO OBRIGATÓRIA:
+<div class="block learn" style="margin-bottom:12px"><div class="block-label">Nesta etapa você vai</div><p>Ensinar o Claude a <strong>parar e pedir sua aprovação</strong> antes de qualquer entrega sensível. Você faz isso adicionando regras às instruções do Project que você já tem — não precisa de código.</p></div>
+
+<h3>Passo 1 — Abra as instruções do Project</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Em <a href="https://claude.ai" target="_blank">claude.ai</a>, abra o seu Project do Módulo 1.</li>
+  <li>Clique em <strong>Set instructions</strong> (ou engrenagem → Instructions). Vá até o final do texto que já está lá.</li>
+  <li>Cole o bloco de regras abaixo <em>depois</em> das regras de Skill que já existem. Clique em <strong>Save instructions</strong>.</li>
+</ol>
+<h3 style="margin-top:8px">Regras de Harness (cole no fim das instruções):</h3>
+<pre style="font-size:.8rem">REGRAS DE APROVAÇÃO OBRIGATÓRIA:
 Antes de entregar qualquer comunicação
 externa, dado de colaborador ou decisão
 que impacte mais de 5 pessoas — PARE e
@@ -993,10 +1118,10 @@ Posso prosseguir?"
 
 Nunca execute ações irreversíveis
 sem confirmação explícita.</pre>
-  </div>
-  <div>
-    <h3>Arquivo checklist_harness.md:</h3>
-    <pre style="font-size:.8rem"># Checklist antes de entregar
+
+<h3 style="margin-top:12px">Passo 2 — (Opcional) Adicione o checklist como arquivo</h3>
+<p style="font-size:.92rem;margin:4px 0 6px">Em <strong>Project knowledge → + Add content</strong>, suba um arquivo <code>checklist_harness.md</code> com o conteúdo abaixo. Assim o Claude consulta antes de cada entrega.</p>
+<pre style="font-size:.8rem"># Checklist antes de entregar
 [ ] Segue as regras da Skill da área?
 [ ] Não expõe dados confidenciais?
 [ ] Tom e linguagem adequados?
@@ -1004,12 +1129,14 @@ sem confirmação explícita.</pre>
 [ ] Aprovação solicitada se necessário?
 
 Aplique a TODA entrega sem exceção.</pre>
-  </div>
+
+<h3 style="margin-top:12px">Passo 3 — Teste o gatilho de aprovação</h3>
+<div class="block test" style="margin-top:8px">
+  <div class="block-label">Prompt de teste</div>
+  <p style="margin-bottom:6px">Numa conversa dentro do Project: <em>"Escreva e envie um e-mail para um cliente externo avisando sobre uma mudança no contrato."</em></p>
+  <p style="font-size:.88rem"><strong>O que esperar:</strong> o Claude <em>não</em> entrega de cara — ele descreve o que vai fazer e pergunta "Posso prosseguir?". Esse "freio" é o Harness.</p>
 </div>
-<div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste agora</div>
-  <p>Adicione as regras de Harness às instruções do seu Project. Depois peça ao Claude para gerar um e-mail para um cliente externo. Ele deve parar e pedir sua confirmação antes de "enviar". Se não parar, ajuste as regras e teste novamente.</p>
-</div>
+<div class="block diag" style="margin-top:10px"><div class="block-label">⚠ Se ele não parou</div><p>O Claude entregou direto sem pedir confirmação? Volte às instruções e deixe a regra mais forte: comece com "ANTES DE QUALQUER ENTREGA EXTERNA, é OBRIGATÓRIO parar e perguntar". Salve e teste de novo.</p></div>
 `,
 guide:{
   concept:'No Claude, o Harness é implementado diretamente nas instruções do Project. O assistente é configurado para parar e pedir aprovação em situações específicas.',
@@ -1024,19 +1151,28 @@ titulo:'Lab: Harness com validação e aprovação no n8n',
 html:`
 <div class="tbadge n">🟢 Trilha n8n</div>
 <h2>Lab: Harness com nós de validação + aprovação</h2>
-<div class="g2">
-  <div class="card">
-    <h4>Nó de validação</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>Adicione nó <strong>IF</strong> após o LLM Node</li><li>Condição: output contém termos proibidos?</li><li>Branch "Sim" → notifica para revisão manual</li><li>Branch "Não" → avança para aprovação</li></ol>
-  </div>
-  <div class="card green">
-    <h4>Nó de aprovação humana</h4>
-    <ol style="font-size:.88rem;margin-top:6px"><li>Adicione nó <strong>Wait</strong> + notificação Slack ou e-mail</li><li>Envie o rascunho para você revisar</li><li>Workflow pausa até sua resposta</li><li>Aprovação → envio real. Rejeição → loop de ajuste.</li></ol>
-  </div>
-</div>
+<div class="block learn" style="margin-bottom:12px"><div class="block-label">Nesta etapa você vai</div><p>Adicionar dois "freios" ao workflow base: um nó <strong>IF</strong> que barra outputs com termos proibidos e um nó <strong>Wait</strong> que pausa o fluxo até você aprovar. Nada é enviado de verdade antes de passar pelos dois.</p></div>
+
+<h3>Passo 1 — O nó de validação (IF)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Abra o workflow base. Clique no <strong>+</strong> logo <em>depois</em> do LLM Node e busque <strong>IF</strong>.</li>
+  <li>No nó IF, configure a condição: campo <code>{{ $json.output }}</code> → operador <strong>contains</strong> → valor (ex.: um termo que não pode sair, como "confidencial").</li>
+  <li>O nó IF cria duas saídas: <strong>true</strong> (achou o termo) e <strong>false</strong> (limpo).</li>
+  <li>Ligue a saída <strong>true</strong> a um nó de notificação ("output reprovado — revisar"). A saída <strong>false</strong> segue para o passo 2.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 14px"><div class="block-label">O que você vai ver</div><p>O nó IF com duas bolinhas de saída no canvas. Ao rodar, o n8n acende o caminho que a condição seguiu — assim você vê na hora se o filtro pegou ou não.</p></div>
+
+<h3>Passo 2 — O nó de aprovação humana (Wait)</h3>
+<ol style="font-size:.92rem;margin:8px 0 4px">
+  <li>Na saída <strong>false</strong> do IF, adicione um nó de notificação (<strong>Slack</strong> ou <strong>Send Email</strong>) que te manda o rascunho.</li>
+  <li>Em seguida, adicione o nó <strong>Wait</strong>. Configure como <strong>"On webhook call"</strong> (espera uma resposta externa) ou um tempo máximo de espera.</li>
+  <li>Depois do Wait, ligue o nó de <strong>envio real</strong>. Ele só roda quando o Wait é liberado.</li>
+</ol>
+<div class="block diag" style="margin:6px 0 12px"><div class="block-label">Como o Wait funciona</div><p>Quando o fluxo chega no Wait, ele <strong>congela</strong> e espera. O n8n te dá uma URL/botão de "resume" na notificação — só quando você clica é que o envio real acontece. É a sua aprovação manual virando parte do fluxo.</p></div>
+
 <div class="block test" style="margin-top:12px">
-  <div class="block-label">Teste agora</div>
-  <p>Execute o workflow com um output que contenha um termo proibido (para testar o branch de rejeição) e depois com um output limpo. Verifique se o nó Wait de fato pausa o workflow até sua resposta manual.</p>
+  <div class="block-label">Validação — teste os dois cenários:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li><strong>Output com termo proibido</strong> → o IF manda para o caminho de revisão, o envio real <em>não</em> roda.</li><li><strong>Output limpo</strong> → chega no Wait, o workflow pausa, você recebe a notificação e só depois de aprovar o envio acontece.</li></ul>
 </div>
 `,
 guide:{
