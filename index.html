@@ -389,6 +389,7 @@ html:`
   <div class="card cyan"><h4>Módulo 4</h4><p style="font-size:.88rem">Seu Assistente de Área funcionando</p></div>
 </div>
 <div class="block hook" style="margin-top:8px">Ao final desta trilha, você terá um sistema que executa tarefas recorrentes da sua área sem precisar de prompts repetidos e com aprovação humana nos pontos certos.</div>
+<div class="block learn" style="margin-top:8px"><div class="block-label">Baseado no melhor do mercado</div><p>O conteúdo segue os mesmos princípios dos cursos de referência mundial — Anthropic Academy, o <em>Agentic AI</em> de Andrew Ng (DeepLearning.AI) e os principais cursos de automação com n8n: padrões simples e compostos, reflexão (a IA revisa o próprio trabalho) e avaliação disciplinada antes de confiar no resultado.</p></div>
 `,
 guide:{
   concept:'Esta trilha é autodidata: você lê, pratica e avança no seu ritmo. Não há vídeo nem apresentação ao vivo.',
@@ -944,6 +945,44 @@ guide:{
 audio:'Nesta etapa você cria o padrão de Agente e Subagente no n8n usando dois workflows separados. Primeiro crie o sub-workflow do Subagente: um nó Execute Workflow Trigger como entrada, um LLM Node com prompt de análise focada, e retorno em JSON. Teste o sub-workflow isolado. Depois, no workflow principal, adicione um nó Execute Workflow apontando para o sub-workflow, receba o JSON com o resumo, passe para o LLM Node que usa a Skill da área, e entregue via Slack ou e-mail. O teste é executar o fluxo completo com dados reais e verificar se os dois workflows se comunicam corretamente.'
 },
 
+{id:'m2-7',modulo:'MÓDULO 2 — Reflexão',trilha:'',
+titulo:'Reflexão: a IA revisa o próprio trabalho',
+html:`
+<h2>Reflexão — o padrão que dobra a qualidade</h2>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Por que esta etapa existe</div>
+  <p>Este é um dos padrões mais usados pelos melhores times de IA do mundo (a Anthropic chama de <em>Evaluator-Optimizer</em>; Andrew Ng, de <em>Reflection</em>). A ideia é simples: em vez de aceitar a primeira resposta, você faz a IA <strong>criticar e melhorar o próprio rascunho</strong> antes de entregar.</p>
+</div>
+<div class="g2">
+  <div class="card amber">
+    <h4>Sem reflexão</h4>
+    <p style="font-size:.9rem">Você pede → a IA responde → você usa o primeiro rascunho. Erros pequenos passam batido e você revisa tudo na mão.</p>
+  </div>
+  <div class="card green">
+    <h4>Com reflexão</h4>
+    <p style="font-size:.9rem">Você pede → a IA responde → a IA avalia a própria resposta contra um critério → reescreve melhor. Você recebe a 2ª versão, já corrigida.</p>
+  </div>
+</div>
+<h3 style="margin-top:14px">O prompt de reflexão (cole depois de receber um rascunho):</h3>
+<pre>"Antes de finalizar, avalie o texto acima
+como se fosse um revisor crítico:
+1. Cumpre TODAS as regras da minha área?
+2. Tem algum trecho vago, longo ou fora do tom?
+3. A ação final está clara?
+
+Liste o que pode melhorar e depois
+reescreva a versão final corrigida."</pre>
+<div class="block do" style="margin-top:10px"><div class="block-label">Faça agora</div><p>Pegue um rascunho que a sua Skill gerou no Módulo 1. Cole o prompt de reflexão acima. Compare a 1ª versão com a 2ª — a diferença costuma ser visível.</p></div>
+<div class="block key" style="margin-top:12px">Reflexão é barata e poderosa: uma chamada a mais transforma "quase bom" em "pronto para enviar". Use sempre que a entrega for importante.</div>
+`,
+guide:{
+  concept:'Reflexão (ou Evaluator-Optimizer) é o padrão em que a IA avalia e reescreve o próprio rascunho antes de entregar. É um dos padrões centrais dos melhores cursos do mercado.',
+  step:'Pegue um rascunho da sua Skill e cole o prompt de reflexão. Peça para a IA criticar e reescrever. Compare as duas versões.',
+  result:'Você sabe transformar a primeira resposta da IA em uma versão revisada e melhor, sem revisar tudo na mão.'
+},
+audio:'Esta etapa apresenta um dos padrões mais valiosos do mercado de IA: a reflexão. A Anthropic chama de Evaluator-Optimizer e Andrew Ng chama de Reflection. A ideia é simples e muito poderosa: em vez de aceitar a primeira resposta da IA, você pede para ela criticar o próprio rascunho e reescrever uma versão melhor. Sem reflexão, você usa o primeiro rascunho e revisa tudo na mão. Com reflexão, a IA avalia a própria resposta contra os seus critérios e entrega já a segunda versão corrigida. Para usar, pegue um rascunho que a sua Skill gerou e cole o prompt de reflexão que aparece na tela: ele pede para a IA verificar se cumpre todas as regras, se há trechos vagos ou fora do tom, e se a ação final está clara, e depois reescrever a versão final. Compare a primeira com a segunda versão: a diferença costuma ser visível. Reflexão é barata e poderosa. Use sempre que a entrega for importante.'
+},
+
 {id:'m2-6',modulo:'MÓDULO 2 — Fechamento',trilha:'',
 titulo:'Módulo 2 concluído',
 html:`
@@ -952,6 +991,7 @@ html:`
 <div class="checklist" style="margin-top:12px">
   <div class="ci" onclick="toggleCi(this,'m2-subagente')"><div class="ci-box" id="cb-m2-subagente"></div><div class="ci-text"><strong>Subagente funcionando</strong> — processei volume pesado em isolamento</div></div>
   <div class="ci" onclick="toggleCi(this,'m2-agente')"><div class="ci-box" id="cb-m2-agente"></div><div class="ci-text"><strong>Agente coordenando</strong> — o fluxo principal usa o output do Subagente e aplica a Skill</div></div>
+  <div class="ci" onclick="toggleCi(this,'m2-reflexao')"><div class="ci-box" id="cb-m2-reflexao"></div><div class="ci-text"><strong>Reflexão aplicada</strong> — fiz a IA criticar e reescrever o próprio rascunho e comparei as versões</div></div>
 </div>
 <div class="block hook" style="margin-top:12px">Próximo módulo: Harness — como conectar a IA a ferramentas reais e garantir controle com aprovação humana.</div>
 `,
@@ -1183,6 +1223,52 @@ guide:{
 audio:'Nesta etapa você implementa o Harness no n8n com dois nós: validação e aprovação. Para o nó de validação, adicione um nó IF após o LLM Node. Configure a condição para verificar termos proibidos no output. Se detectar termos proibidos, o fluxo vai para revisão manual. Se o output estiver limpo, avança para aprovação. Para o nó de aprovação, adicione um nó Wait mais uma notificação por Slack ou e-mail. O workflow pausa até você responder. Se você aprovar, executa o envio real. Se rejeitar, o fluxo vai para um loop de ajuste. Teste com os dois cenários: output com problema e output limpo.'
 },
 
+{id:'m3-7',modulo:'MÓDULO 3 — Avaliação',trilha:'',
+titulo:'Avaliação: como saber se seu assistente está bom',
+html:`
+<h2>Avaliação — a etapa que separa amador de profissional</h2>
+<div class="block learn" style="margin-bottom:12px">
+  <div class="block-label">Por que esta etapa existe</div>
+  <p>Andrew Ng, um dos maiores nomes de IA do mundo, diz que <strong>a maior diferença entre quem constrói bons assistentes e quem não constrói é avaliar de forma disciplinada</strong> — em vez de confiar "no olho". Você não precisa de matemática: precisa de um método simples e repetível.</p>
+</div>
+
+<h3>Passo 1 — Monte seu conjunto de teste (5 a 10 casos)</h3>
+<p style="font-size:.92rem;margin:4px 0 6px">Liste tarefas reais da sua área, incluindo casos difíceis (o pedido confuso, o caso sensível, o que costuma dar errado). Anote, para cada um, qual seria a <strong>resposta ideal</strong>.</p>
+<pre style="font-size:.8rem">Caso 1: comunicado de mudança de política
+Caso 2: resposta a colaborador irritado
+Caso 3: resumo de documento longo e técnico
+Caso 4: pedido ambíguo ("faz aquele texto")
+Caso 5: assunto sensível (demissão, salário)</pre>
+
+<h3 style="margin-top:12px">Passo 2 — Defina 3 a 5 critérios de nota</h3>
+<p style="font-size:.92rem;margin:4px 0 6px">Transforme as regras da sua Skill em uma régua objetiva. Para cada caso, dê <strong>Passou / Não passou</strong> em cada critério:</p>
+<pre style="font-size:.8rem">[ ] Tom correto da área
+[ ] Sem linguagem de cobrança
+[ ] Tamanho adequado ao canal
+[ ] Ação final clara
+[ ] Nenhum dado sensível exposto</pre>
+
+<h3 style="margin-top:12px">Passo 3 — Rode, conte e analise o erro</h3>
+<ol style="font-size:.92rem;margin:6px 0 4px">
+  <li>Rode os 5–10 casos no seu assistente e preencha a tabela de Passou/Não passou.</li>
+  <li>Conte: <em>"7 de 10 passaram em tudo"</em>. Essa é sua <strong>nota de base</strong>.</li>
+  <li><strong>Análise de erro:</strong> olhe os que falharam e ache o padrão. Falha sempre no mesmo critério? Então o problema está na regra da Skill — ajuste lá e rode o teste de novo.</li>
+</ol>
+<div class="block diag" style="margin-top:10px"><div class="block-label">Por que repetir o mesmo teste</div><p>Toda vez que você mudar uma instrução, rode os mesmos casos. Assim você sabe se a mudança <em>melhorou</em> ou <em>piorou</em> — em vez de adivinhar. É isso que os melhores cursos chamam de "eval".</p></div>
+
+<div class="block test" style="margin-top:12px">
+  <div class="block-label">Validação — você concluiu quando:</div>
+  <ul style="font-size:.9rem;margin:4px 0 0"><li>Tem uma lista de 5–10 casos reais com a resposta ideal de cada um.</li><li>Tem uma régua de 3–5 critérios objetivos.</li><li>Rodou o teste, anotou a nota de base e identificou em qual critério seu assistente mais erra.</li></ul>
+</div>
+`,
+guide:{
+  concept:'Avaliação (eval) é medir a qualidade do assistente de forma disciplinada e repetível, com um conjunto fixo de casos e critérios — em vez de confiar no olho. É apontada como a habilidade que mais separa quem constrói bons assistentes.',
+  step:'Monte 5 a 10 casos reais com a resposta ideal, defina 3 a 5 critérios de Passou/Não passou, rode e conte sua nota de base. Analise em qual critério mais erra.',
+  result:'Você tem um teste repetível que mostra, a cada ajuste, se o seu assistente melhorou ou piorou — sem adivinhação.'
+},
+audio:'Esta etapa ensina o que separa quem constrói bons assistentes de quem não constrói: avaliar de forma disciplinada. Andrew Ng, um dos maiores nomes de IA do mundo, diz que essa é a maior diferença entre os dois grupos. E você não precisa de matemática, só de um método repetível. Passo um: monte um conjunto de teste com cinco a dez casos reais da sua área, incluindo os difíceis, como o pedido confuso e o caso sensível, e anote para cada um qual seria a resposta ideal. Passo dois: transforme as regras da sua Skill em uma régua de três a cinco critérios objetivos, como tom correto, sem cobrança, tamanho adequado e ação clara, e avalie cada caso como passou ou não passou. Passo três: rode todos os casos, conte quantos passaram em tudo, e essa é a sua nota de base. Depois faça a análise de erro: olhe os que falharam e procure o padrão. Se falha sempre no mesmo critério, o problema está na regra da Skill, então ajuste lá e rode o mesmo teste de novo. Toda vez que mudar uma instrução, rode os mesmos casos para saber se melhorou ou piorou. Isso é o que os melhores cursos chamam de eval.'
+},
+
 {id:'m3-6',modulo:'MÓDULO 3 — Fechamento',trilha:'',
 titulo:'Módulo 3 concluído',
 html:`
@@ -1191,6 +1277,7 @@ html:`
 <div class="checklist" style="margin-top:12px">
   <div class="ci" onclick="toggleCi(this,'m3-harness')"><div class="ci-box" id="cb-m3-harness"></div><div class="ci-text"><strong>Harness ativo</strong> — o sistema pede aprovação antes de comunicações externas ou dados sensíveis</div></div>
   <div class="ci" onclick="toggleCi(this,'m3-validacao')"><div class="ci-box" id="cb-m3-validacao"></div><div class="ci-text"><strong>Validação funcionando</strong> — testei com output que passa e com output que falha na validação</div></div>
+  <div class="ci" onclick="toggleCi(this,'m3-eval')"><div class="ci-box" id="cb-m3-eval"></div><div class="ci-text"><strong>Avaliação montada</strong> — tenho 5–10 casos de teste, uma régua de critérios e a nota de base do meu assistente</div></div>
 </div>
 <div class="block hook" style="margin-top:12px">Último módulo: Montagem Final — integre tudo em um Assistente de Área completo e funcionando.</div>
 `,
@@ -1782,6 +1869,10 @@ document.addEventListener('keydown', e => {
 
 /* ═══ CONCEITOS ═══ */
 const CONCEPTS = {
+  'Reflexão': {label:'Reflexão (Reflection)',icon:'🔁',short:'Padrão em que a IA critica e reescreve o próprio rascunho antes de entregar.',detail:'A Anthropic chama de Evaluator-Optimizer e Andrew Ng de Reflection. Em vez de aceitar a 1ª resposta, você pede para a IA avaliar a própria saída contra critérios e gerar uma 2ª versão corrigida. Barato e poderoso.'},
+  'Evaluator-Optimizer': {label:'Evaluator-Optimizer',icon:'🔁',short:'Nome técnico (Anthropic) do padrão de reflexão: gerar → avaliar → otimizar.',detail:'Um passo gera a resposta, outro a avalia contra critérios e um terceiro reescreve. É a versão automatizada da revisão humana.'},
+  'eval': {label:'Eval (Avaliação)',icon:'📊',short:'Teste repetível que mede a qualidade do assistente com casos e critérios fixos.',detail:'Você monta 5–10 casos reais com a resposta ideal, define critérios de Passou/Não passou e roda sempre que muda algo — para saber se melhorou ou piorou em vez de adivinhar. Apontado por Andrew Ng como a habilidade que mais separa quem constrói bons assistentes.'},
+  'análise de erro': {label:'Análise de erro',icon:'🔎',short:'Olhar os casos que falharam no eval e achar o padrão que se repete.',detail:'Se o assistente falha sempre no mesmo critério, o problema está na regra da Skill — corrija lá e rode o mesmo teste de novo.'},
   'AppScript': {label:'AppScript (Google)',icon:'⚙️',short:'Ferramenta do Google para automatizar planilhas, e-mails e docs com scripts.',detail:'Acesse em qualquer Planilha Google: menu Extensions → Apps Script. Você escreve funções em JavaScript que rodam dentro dos seus arquivos Google.',url:'https://script.google.com',urlLabel:'Abrir Apps Script'},
   'NotebookLM': {label:'NotebookLM',icon:'📓',short:'IA do Google que responde perguntas baseada nos seus próprios documentos.',detail:'Suba PDFs, docs ou apresentações. O NotebookLM lê tudo e responde baseado apenas nesses arquivos — sem inventar informação de fora.',url:'https://notebooklm.google.com',urlLabel:'Abrir NotebookLM'},
   'Gems': {label:'Gems (Gemini)',icon:'🔵',short:'Versões personalizadas do Gemini com instruções fixas — sua Skill no ecossistema Google.',detail:'Gems ficam no menu lateral do Gemini Advanced. Toda conversa dentro de um Gem começa com as instruções que você configurou, sem precisar repetir.',url:'https://gemini.google.com',urlLabel:'Abrir Gemini'},
